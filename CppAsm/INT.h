@@ -72,17 +72,14 @@ void OpInt::Do(const byte &b, Code &code, const RegisterWord &r)
 		RegisterWord rg;
 		Help::getWordFromStack(code, rg);
 
-		cout << rg.getRightRegister();
+		cout << hex << rg.getRightRegister();
 	}
 	else if (r.getValue() == 0x0005)
 	{
 		RegisterWord rg;
 		Help::getWordFromStack(code, rg);
 
-		if (rg.getLeftRegister() != 0)
-			cout << rg.getLeftRegister();
-		else if (rg.getRightRegister() != 0)
-			cout << rg.getRightRegister();
+		cout << rg.getValue();
 	}
 	else if (r.getValue() == 0x0006)
 	{

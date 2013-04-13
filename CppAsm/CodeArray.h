@@ -20,7 +20,7 @@ public:
 	int getSize() const;
 
 	char *operator[](int);
-//private:
+private:
 	char lines[1024*128];
 	int current;
 };

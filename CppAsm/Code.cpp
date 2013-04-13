@@ -4,7 +4,7 @@
 #include "Help.h"
 #include "AsmOperator.h"
 #include "Debug.h"
-
+#include <exception>
 #include <iostream>
 #include <fstream>
 
@@ -15,7 +15,8 @@ Code::Code(const char * path)
 	ifstream Input;
 	Input.open(path, ios::binary);
 	//TODO: Добавить проверка на успешное открытие файла
-	
+	if (!Input)
+		throw runtime_error("Invalid path");
 	//вычисляем размер файла
 	Input.seekg (0, Input.end);
 	int length = Input.tellg();

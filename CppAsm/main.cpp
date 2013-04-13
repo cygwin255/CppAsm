@@ -22,11 +22,11 @@ int main(int argc, char *argv[])
 	Compiler::getInstance()->Compile(argv[1], s.c_str());
 	Code code(s.c_str());
 #else
-	Compiler::getInstance()->Compile("C:\code.asm", "C:\code.asm.obj");
-	Code code("C:\code.asm.obj");
+	Compiler::getInstance()->Compile("..\\Examples\\HelloWorld.casm", "..\\Examples\\HelloWorld.obj");
+	Code code("..\\Examples\\HelloWorld.obj");
 #endif
 	
-	code.setDebug(false);
+	code.setDebug(true);
 
 	//long c1 = clock();
 	code.Run();
@@ -35,7 +35,9 @@ int main(int argc, char *argv[])
 	//cout << (c2 - c1) << endl;
 
 	cout << endl << "Press ESC to exit";
+#ifndef _DEBUG
 	while(_getch() != 27);
+#endif
 
 	return 0;
 }

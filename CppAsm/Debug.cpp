@@ -69,7 +69,7 @@ void Debug::DrawRegistersState()
 	regpair registers[50];
 	//размер массива регистров
 	int reg_size = 0;
-	//поиск нужных регистров, байтовые регистры(ah, cl..) не включаем
+	//поиск нужных регистров, байтовые "регистры"(ah, cl..) не включаем
 	for(int i=0;i<Help::doubleArrayLength(AsmOperator::Registers);i++)
 	{
 		switch(i)
@@ -121,6 +121,7 @@ void Debug::DrawCodeAndStackState(int codeOffset)
 	//адрес вершины стека
 	int stack_head_max = m_code->getRegister(Help::SP).getValue();
 	
+	//"смещение" стека, если в нём много элементов
 	int stack_head = stack_head_max - m_codeHeight*2;
 	if (stack_head < 0)
 		stack_head = 0;
