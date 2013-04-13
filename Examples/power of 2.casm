@@ -1,0 +1,19 @@
+mov ax, 1
+mov cx, 15
+lp:
+	push ax
+	int 5h
+
+	call new_line
+	
+	mul ax, 2
+loop lp
+
+jmp exit
+
+new_line:
+	push 0Ah
+	int 6h
+ret
+
+exit:

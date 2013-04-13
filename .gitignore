@@ -11,3 +11,29 @@
 *.lai
 *.la
 *.a
+
+# VS generated files
+*.aps
+*.idb
+*.ncb
+*.obj
+*.opensdf
+*.orig
+*.pdb
+*.sdf
+*.suo
+*.user
+
+# VS build folders
+Debug/
+Release/
+CppAsm/Debug/
+CppAsm/Release/
+bin/
+Build/
+BuildTmp/
+cli/temp/
+ipch/
+lib/temp/
+test/temp/
+Examples/undone/

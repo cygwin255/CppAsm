@@ -1,0 +1,21 @@
+hello db 'Hello, World!\n$'  
+
+push 00FFh
+push 01
+push 02FFh
+push 03
+push 04
+push 05
+push 06
+push 07
+push 08
+push 09
+push 10
+push 11
+push 12
+push 13
+push 14
+push 15
+push 16
+push 17
+push 18

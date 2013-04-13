@@ -1,0 +1,90 @@
+; Операторы:
+; 0x00 mov приёмник, источник
+;	   mov ax, bx
+;	   mov ax, [message]
+;	   mov ah, 15h
+;      mov cl, FFh
+; 0x01 add
+; 0x02 sub
+; 0x03 inc
+; 0x04 dec
+; 0x05 int
+; 0x06 loop
+; 0x07 jmp
+; 0x08 ret
+; 0x09 push
+; 0x0A push
+; 0x0B pop
+; 0x0C nop
+; 0x0D cmp
+; 0x0E jz
+; 0x0F jnz
+; 0x10 mul
+; 0x11 div
+; 0x12 mget
+; 0x13 mset
+; 0x14 call
+
+hello db [2000]
+size dw 2000
+pw dw 5000
+
+mov ax, [hello]
+
+mget bx, [size]
+add ax, bx
+dec ax
+
+mov bx, 1
+mset bl, ax
+
+mget cx, [pw]
+dec cx
+
+pow:
+	call mul_2
+loop pow
+
+
+jmp exit
+
+mul_2 uses ax, cx, dx:
+	mov cx, [hello]
+	mget cx, [size]
+	dec cx
+	mov dx, 0
+	
+	lp:
+		mov ax, 0
+		mget al, cx
+		
+		mul ax, 5
+		add ax, dx
+		
+		mset al, cx
+		mov dx, ah
+		
+	loop lp
+ex:
+ret
+
+
+
+
+print:
+	mov ax, [hello]
+	print_loop:
+		mget bh, ax
+		cmp bh, 24h ; 24h - знак $
+		jz print_loop_ex
+		push bh
+		int 6h
+		inc ax
+		
+		mov dx, 100h
+		
+	jmp print_loop
+	print_loop_ex:
+ret
+
+exit:

@@ -1,0 +1,30 @@
+start:
+mov cx, FFFFh
+mov ax, 0
+mov dx, 1
+
+loop_i:
+	mov ax, cx
+	mov cx, FFFFh
+	
+	loop_j:
+		inc dx
+	loop loop_j
+	
+	mov cx, ax	
+loop loop_i
+
+push dx
+int 5h
+call new_line
+
+jmp start
+
+jmp exit
+
+new_line:
+	push 0Ah
+	int 6h
+ret
+
+exit:

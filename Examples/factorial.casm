@@ -1,0 +1,41 @@
+hello db 'Enter n: $'
+
+call print
+int 3h
+pop cx
+
+dec cx
+
+mov ax, 1
+mov dx, 1
+lp:
+	mul ax, dx
+	inc dx
+loop lp
+
+push ax
+int 5h
+	
+call new_line
+
+jmp exit
+
+new_line:
+	push 0Ah
+	int 6h
+ret
+
+print:
+	mov ax, [hello]
+	print_loop:
+		mget bh, ax
+		cmp bh, 24h
+		jz print_loop_ex
+		push bh
+		int 6h
+		inc ax
+	jmp print_loop
+	print_loop_ex:
+ret
+
+exit:
