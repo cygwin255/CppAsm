@@ -1,4 +1,4 @@
-#include "Debug.h"
+п»ї#include "Debug.h"
 
 #include "Help.h"
 #include "AsmOperator.h"
@@ -38,7 +38,7 @@ void Debug::Update(int codeOffset)
 
 	m_waitAddress = 0;
 
-	//очищаем поток и консоль
+	//РѕС‡РёС‰Р°РµРј РїРѕС‚РѕРє Рё РєРѕРЅСЃРѕР»СЊ
 	ClearStream();
 
 	DrawRegistersState();
@@ -49,7 +49,7 @@ void Debug::Update(int codeOffset)
 
 	m_stream << "          <F10 = Step> <F11 = Step IN> <Up|down = data move>";
 
-	//выводим буферный вывод в консоль
+	//РІС‹РІРѕРґРёРј Р±СѓС„РµСЂРЅС‹Р№ РІС‹РІРѕРґ РІ РєРѕРЅСЃРѕР»СЊ
 	printf("%s", m_stream.str().c_str());
 	
 	HandleKeyPress(codeOffset);
@@ -65,11 +65,11 @@ void Debug::ClearStream()
 void Debug::DrawRegistersState()
 {
 	typedef std::pair<const char *, const RegisterWord *> regpair;
-	//массив регистров, кроме половин
+	//РјР°СЃСЃРёРІ СЂРµРіРёСЃС‚СЂРѕРІ, РєСЂРѕРјРµ РїРѕР»РѕРІРёРЅ
 	regpair registers[50];
-	//размер массива регистров
+	//СЂР°Р·РјРµСЂ РјР°СЃСЃРёРІР° СЂРµРіРёСЃС‚СЂРѕРІ
 	int reg_size = 0;
-	//поиск нужных регистров, байтовые "регистры"(ah, cl..) не включаем
+	//РїРѕРёСЃРє РЅСѓР¶РЅС‹С… СЂРµРіРёСЃС‚СЂРѕРІ, Р±Р°Р№С‚РѕРІС‹Рµ "СЂРµРіРёСЃС‚СЂС‹"(ah, cl..) РЅРµ РІРєР»СЋС‡Р°РµРј
 	for(int i=0;i<Help::doubleArrayLength(AsmOperator::Registers);i++)
 	{
 		switch(i)
@@ -87,9 +87,9 @@ void Debug::DrawRegistersState()
 			registers[reg_size++] = std::make_pair( AsmOperator::Registers[i], &m_code->getRegister(i) );
 		}
 	}
-	//прописны буквы
+	//РїСЂРѕРїРёСЃРЅС‹ Р±СѓРєРІС‹
 	m_stream << uppercase;
-	//состояния регистров по строкам и столбцам
+	//СЃРѕСЃС‚РѕСЏРЅРёСЏ СЂРµРіРёСЃС‚СЂРѕРІ РїРѕ СЃС‚СЂРѕРєР°Рј Рё СЃС‚РѕР»Р±С†Р°Рј
 	for(int i=0;i<m_registersHeight;i++)
 	{
 		for(int j=0;j<reg_size;j++)
@@ -111,17 +111,17 @@ void Debug::DrawRegistersState()
 
 void Debug::DrawCodeAndStackState(int codeOffset)
 {
-	//текущий оператор
+	//С‚РµРєСѓС‰РёР№ РѕРїРµСЂР°С‚РѕСЂ
 	int current_op = codeOffset;
 
-	//плавное перемещение на 4 позицию
+	//РїР»Р°РІРЅРѕРµ РїРµСЂРµРјРµС‰РµРЅРёРµ РЅР° 4 РїРѕР·РёС†РёСЋ
 	for(int i=0;i < (m_codeHeight/2) && codeOffset > 0;i++)
 		codeOffset -= 3;
 
-	//адрес вершины стека
+	//Р°РґСЂРµСЃ РІРµСЂС€РёРЅС‹ СЃС‚РµРєР°
 	int stack_head_max = m_code->getRegister(Help::SP).getValue();
 	
-	//"смещение" стека, если в нём много элементов
+	//"СЃРјРµС‰РµРЅРёРµ" СЃС‚РµРєР°, РµСЃР»Рё РІ РЅС‘Рј РјРЅРѕРіРѕ СЌР»РµРјРµРЅС‚РѕРІ
 	int stack_head = stack_head_max - m_codeHeight*2;
 	if (stack_head < 0)
 		stack_head = 0;
@@ -130,13 +130,13 @@ void Debug::DrawCodeAndStackState(int codeOffset)
 #pragma region code + stack
 	for(int i=0;i<m_codeHeight;i++)
 	{
-		//адрес
+		//Р°РґСЂРµСЃ
 		m_stream << hex << setw(4) << setfill('0') << m_code->getRegister(Help::CS).getValue() << ':'
 			<< hex << setw(4) << setfill('0') << (codeOffset - m_code->getRegister(Help::CS).getValue())
 			<< setw(6) << (current_op == codeOffset ? setfill(FILLER) : setfill(' ')) << ' ';
 
 		byte command[3];
-		//считываем команду из памяти
+		//СЃС‡РёС‚С‹РІР°РµРј РєРѕРјР°РЅРґСѓ РёР· РїР°РјСЏС‚Рё
 		m_code->memory.read(codeOffset, command, 3);
 		RegisterWord r;
 		r.setLeftRegister(command[1]);
@@ -144,7 +144,7 @@ void Debug::DrawCodeAndStackState(int codeOffset)
 
 		bool smallRegister = r.getValue() <= 0xFF;
 		int registerWidth = smallRegister ? 2 : 4;
-		//проверяем на достищения сегмента данных, которые следует сразу после сегмента команд
+		//РїСЂРѕРІРµСЂСЏРµРј РЅР° РґРѕСЃС‚РёС‰РµРЅРёСЏ СЃРµРіРјРµРЅС‚Р° РґР°РЅРЅС‹С…, РєРѕС‚РѕСЂС‹Рµ СЃР»РµРґСѓРµС‚ СЃСЂР°Р·Сѓ РїРѕСЃР»Рµ СЃРµРіРјРµРЅС‚Р° РєРѕРјР°РЅРґ
 		if (codeOffset >= m_code->getRegister(Help::DS).getValue())
 		{
 			m_stream << "   DATA SEGMENT";
@@ -153,31 +153,31 @@ void Debug::DrawCodeAndStackState(int codeOffset)
 		}
 		else
 		{
-			//выводим тип оператора
+			//РІС‹РІРѕРґРёРј С‚РёРї РѕРїРµСЂР°С‚РѕСЂР°
 			m_stream << setw(6) << left << (current_op == codeOffset ? setfill(FILLER) : setfill(' ')) 
 				<< AsmOperator::Operators[command[0]];
 
-			//операторы без операндов - ret & nop
+			//РѕРїРµСЂР°С‚РѕСЂС‹ Р±РµР· РѕРїРµСЂР°РЅРґРѕРІ - ret & nop
 			bool voidregister = (command[0] == Help::RET) || (command[0] == Help::NOP);
 
-			//проверка на ссылки, когда следует заменять операнд команды на соответствующий регистр
+			//РїСЂРѕРІРµСЂРєР° РЅР° СЃСЃС‹Р»РєРё, РєРѕРіРґР° СЃР»РµРґСѓРµС‚ Р·Р°РјРµРЅСЏС‚СЊ РѕРїРµСЂР°РЅРґ РєРѕРјР°РЅРґС‹ РЅР° СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰РёР№ СЂРµРіРёСЃС‚СЂ
 			if (Help::isOnlyNumericOperator(command[0]))
 				m_stream << setw(registerWidth) << right << setfill('0') << r.getValue();
 			else
 				m_stream << setw(registerWidth) << right << (current_op == codeOffset ? setfill(FILLER) : setfill(' ')) 
 				<< (voidregister ? "  " : AsmOperator::Registers[command[2]]);
 
-			//отступ для вывода стека
+			//РѕС‚СЃС‚СѓРї РґР»СЏ РІС‹РІРѕРґР° СЃС‚РµРєР°
 			m_stream << (current_op == codeOffset ? setfill(FILLER) : setfill(' ')) << setw(38 - registerWidth + 2) 
 				<< VERTICAL_BAR << " ";
 		}
 			if (stack_head < stack_head_max)
 			{
-				//адрес стека
+				//Р°РґСЂРµСЃ СЃС‚РµРєР°
 				m_stream << '+' << setw(4) << setfill('0') << stack_head << setfill(' ') << setw(2) << ' ';
 
 				byte heap[2];
-				//считываем 2 байта стека из памяти
+				//СЃС‡РёС‚С‹РІР°РµРј 2 Р±Р°Р№С‚Р° СЃС‚РµРєР° РёР· РїР°РјСЏС‚Рё
 				m_code->memory.read(m_code->getRegister(Help::SS).getValue() + stack_head, heap, 2);
 				RegisterWord r;
 				r.setLeftRegister(heap[0]);
@@ -191,7 +191,7 @@ void Debug::DrawCodeAndStackState(int codeOffset)
 				m_stream << "empty";
 			m_stream << endl;
 		
-		//смещаем указатель на следующую команду в памяти (размер команда = 3)
+		//СЃРјРµС‰Р°РµРј СѓРєР°Р·Р°С‚РµР»СЊ РЅР° СЃР»РµРґСѓСЋС‰СѓСЋ РєРѕРјР°РЅРґСѓ РІ РїР°РјСЏС‚Рё (СЂР°Р·РјРµСЂ РєРѕРјР°РЅРґР° = 3)
 		codeOffset += 3;
 	}
 #pragma endregion code + stack
@@ -260,8 +260,8 @@ void Debug::HandleKeyPress( int codeOffset)
 	static bool alreadyInCycle = false;
 	static const int F10 = 68;
 	static const int F11 = 133;
-	static const int UP = 72; // стрелка вверх
-	static const int DOWN = 80; // стрелка вниз
+	static const int UP = 72; // СЃС‚СЂРµР»РєР° РІРІРµСЂС…
+	static const int DOWN = 80; // СЃС‚СЂРµР»РєР° РІРЅРёР·
 
 
 	if (!alreadyInCycle)
