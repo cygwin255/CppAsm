@@ -15,8 +15,6 @@ public:
 
 	void SetAt(int, byte);
 
-	
-
 	int getSize() const;
 
 	char *operator[](int);

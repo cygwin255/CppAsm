@@ -22,11 +22,12 @@ int main(int argc, char *argv[])
 	Compiler::getInstance()->Compile(argv[1], s.c_str());
 	Code code(s.c_str());
 #else
+
 	Compiler::getInstance()->Compile("..\\Examples\\HelloWorld.casm", "..\\Examples\\HelloWorld.obj");
 	Code code("..\\Examples\\HelloWorld.obj");
 #endif
 	
-	code.setDebug(true);
+	code.setDebug(false);
 
 	//long c1 = clock();
 	code.Run();

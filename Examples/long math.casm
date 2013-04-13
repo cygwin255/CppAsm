@@ -67,24 +67,4 @@ mul_2 uses ax, cx, dx:
 	loop lp
 ex:
 ret
-
-
-
-
-print:
-	mov ax, [hello]
-	print_loop:
-		mget bh, ax
-		cmp bh, 24h ; 24h - знак $
-		jz print_loop_ex
-		push bh
-		int 6h
-		inc ax
-		
-		mov dx, 100h
-		
-	jmp print_loop
-	print_loop_ex:
-ret
-
 exit:

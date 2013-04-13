@@ -1,4 +1,4 @@
-#include "Compiler.h"
+п»ї#include "Compiler.h"
 #include "CodeArray.h"
 #include "defs.h"
 #include "Help.h"
@@ -58,10 +58,10 @@ Compiler::Compiler()
 
 int Compiler::Compile( const char *LoadPath, const char *SavePath)
 {
-	//объявляем представление программы(объектного кода)
+	//РѕР±СЉСЏРІР»СЏРµРј РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ РїСЂРѕРіСЂР°РјРјС‹(РѕР±СЉРµРєС‚РЅРѕРіРѕ РєРѕРґР°)
 	CodeArray codeArray;
 
-	//первое слово - указатель на сегмент данных, а пока резервируем место
+	//РїРµСЂРІРѕРµ СЃР»РѕРІРѕ - СѓРєР°Р·Р°С‚РµР»СЊ РЅР° СЃРµРіРјРµРЅС‚ РґР°РЅРЅС‹С…, Р° РїРѕРєР° СЂРµР·РµСЂРІРёСЂСѓРµРј РјРµСЃС‚Рѕ
 	codeArray.Add(0);
 	codeArray.Add(0);
 
@@ -71,22 +71,22 @@ int Compiler::Compile( const char *LoadPath, const char *SavePath)
 
 	readFile(LoadPath, Input);
 
-	//лист для восстановления значений uses регистров при вызове ret
+	//Р»РёСЃС‚ РґР»СЏ РІРѕСЃСЃС‚Р°РЅРѕРІР»РµРЅРёСЏ Р·РЅР°С‡РµРЅРёР№ uses СЂРµРіРёСЃС‚СЂРѕРІ РїСЂРё РІС‹Р·РѕРІРµ ret
 	list<RegisterWord> usesParams;
 
-	//метки для переходов
+	//РјРµС‚РєРё РґР»СЏ РїРµСЂРµС…РѕРґРѕРІ
 	map<longint, int> labels;
 
-	//метки(ссылки) на данные
+	//РјРµС‚РєРё(СЃСЃС‹Р»РєРё) РЅР° РґР°РЅРЅС‹Рµ
 	map<longint, int> dataLabels;
 
-	//прямые данные для последующей записи в файл
+	//РїСЂСЏРјС‹Рµ РґР°РЅРЅС‹Рµ РґР»СЏ РїРѕСЃР»РµРґСѓСЋС‰РµР№ Р·Р°РїРёСЃРё РІ С„Р°Р№Р»
 	string rawData;
 
-	//парсим все данные
+	//РїР°СЂСЃРёРј РІСЃРµ РґР°РЅРЅС‹Рµ
 	parseAllData(LoadPath, dataLabels, rawData);
 
-	//парсим все метки
+	//РїР°СЂСЃРёРј РІСЃРµ РјРµС‚РєРё
 	parseAllLabels(LoadPath, labels);
 
 
@@ -114,24 +114,24 @@ int Compiler::Compile( const char *LoadPath, const char *SavePath)
 
 		bool altPush = false;
 
-		//парсим код оператора
+		//РїР°СЂСЃРёРј РєРѕРґ РѕРїРµСЂР°С‚РѕСЂР°
 		operation = Help::findInArray(AsmOperator::Operators, match_result[COMMAND_REGEX_INDEX].str().c_str());
-		//парсим левый операнд
+		//РїР°СЂСЃРёРј Р»РµРІС‹Р№ РѕРїРµСЂР°РЅРґ
 		parseRegisters(match_result, leftRegister, LEFT_OPERAND_REGEX_INDEX, altPush, isLabel);
-		//парсим правый операнд
+		//РїР°СЂСЃРёРј РїСЂР°РІС‹Р№ РѕРїРµСЂР°РЅРґ
 		parseRegisters(match_result, rightRegister, RIGHT_OPERAND_REGEX_INDEX, altPush, isLabel);
 
-		//получаем текущий оператор при помощи фабрики
+		//РїРѕР»СѓС‡Р°РµРј С‚РµРєСѓС‰РёР№ РѕРїРµСЂР°С‚РѕСЂ РїСЂРё РїРѕРјРѕС‰Рё С„Р°Р±СЂРёРєРё
 		AsmOperator *curOperator = AsmOperator::newOperator(operation);
-		//проверяем, не переход ли это, если да, то присваиваем левому регистру адрес для перехода
+		//РїСЂРѕРІРµСЂСЏРµРј, РЅРµ РїРµСЂРµС…РѕРґ Р»Рё СЌС‚Рѕ, РµСЃР»Рё РґР°, С‚Рѕ РїСЂРёСЃРІР°РёРІР°РµРј Р»РµРІРѕРјСѓ СЂРµРіРёСЃС‚СЂСѓ Р°РґСЂРµСЃ РґР»СЏ РїРµСЂРµС…РѕРґР°
 		if (isLabel && labels[Help::CRC32(match_result[LEFT_OPERAND_REGEX_INDEX].str().c_str())] != 0)
 			leftRegister.setValue(labels[Help::CRC32(match_result[LEFT_OPERAND_REGEX_INDEX].str().c_str())]*3 - 3);
 
-		//аналогично, но только для ссылки на данные
+		//Р°РЅР°Р»РѕРіРёС‡РЅРѕ, РЅРѕ С‚РѕР»СЊРєРѕ РґР»СЏ СЃСЃС‹Р»РєРё РЅР° РґР°РЅРЅС‹Рµ
 		if (dataLabels[Help::CRC32(match_result[LABEL_COMMAND_REGEX_INDEX].str().c_str())] != 0)
 			rightRegister.setValue(dataLabels[Help::CRC32(match_result[LABEL_COMMAND_REGEX_INDEX].str().c_str())] - 1);
 
-		//проверяем, не нужно ли дописать push'ы для восстановления регистров
+		//РїСЂРѕРІРµСЂСЏРµРј, РЅРµ РЅСѓР¶РЅРѕ Р»Рё РґРѕРїРёСЃР°С‚СЊ push'С‹ РґР»СЏ РІРѕСЃСЃС‚Р°РЅРѕРІР»РµРЅРёСЏ СЂРµРіРёСЃС‚СЂРѕРІ
 		if (operation == Help::RET)
 			while (usesParams.size() > 0)
 			{
@@ -139,29 +139,29 @@ int Compiler::Compile( const char *LoadPath, const char *SavePath)
 
 				_curOperator->ProcessParsedLine(usesParams.front(), 0, codeArray, false);
 				usesParams.pop_front();
-				//освобождаем память
+				//РѕСЃРІРѕР±РѕР¶РґР°РµРј РїР°РјСЏС‚СЊ
 				delete _curOperator;
 			}
 
-		//записываем команду в объектный код
+		//Р·Р°РїРёСЃС‹РІР°РµРј РєРѕРјР°РЅРґСѓ РІ РѕР±СЉРµРєС‚РЅС‹Р№ РєРѕРґ
 		curOperator->ProcessParsedLine(leftRegister, rightRegister, codeArray, altPush);
 
-		//освобождаем память
+		//РѕСЃРІРѕР±РѕР¶РґР°РµРј РїР°РјСЏС‚СЊ
 		delete curOperator;
 	}
 	
 
-	//устанавливаем указатель на сегмент данных
+	//СѓСЃС‚Р°РЅР°РІР»РёРІР°РµРј СѓРєР°Р·Р°С‚РµР»СЊ РЅР° СЃРµРіРјРµРЅС‚ РґР°РЅРЅС‹С…
 	RegisterWord offset(codeArray.getSize());
 	codeArray.SetAt(0, offset.getLeftRegister());
 	codeArray.SetAt(1, offset.getRightRegister());
 
 	ofstream Output(SavePath, ios::out | ios::binary);
-	//записываем код программы
+	//Р·Р°РїРёСЃС‹РІР°РµРј РєРѕРґ РїСЂРѕРіСЂР°РјРјС‹
 	for (int i=0;i<codeArray.getSize();++i)
 		Output.write(codeArray[i], 1);
 
-	//записываем код данных
+	//Р·Р°РїРёСЃС‹РІР°РµРј РєРѕРґ РґР°РЅРЅС‹С…
 	for(int i=0;i<rawData.size();i++)
 		Output.write(&rawData[i], 1);
 
@@ -269,17 +269,17 @@ void Compiler::parseAllLabels(const char *path, map<longint, int> &labels)
 		smatch match_result;
 		
 		string s(line);
-		//удаляем коментарии
+		//СѓРґР°Р»СЏРµРј РєРѕРјРµРЅС‚Р°СЂРёРё
 		s = regex_replace(s, REMOVE_COMMENTS_REGEX, string(""));
 
 		regex_match (s.cbegin(), s.cend(), match_result, USES_PARSE_REGEX);
 		if (match_result[COMMAND_REGEX_INDEX].str().length() != 0)
 		{ 
-			//добавляем хэш надписи в мап, связываем его с адрессом команд
+			//РґРѕР±Р°РІР»СЏРµРј С…СЌС€ РЅР°РґРїРёСЃРё РІ РјР°Рї, СЃРІСЏР·С‹РІР°РµРј РµРіРѕ СЃ Р°РґСЂРµСЃСЃРѕРј РєРѕРјР°РЅРґ
 			longint _hash = Help::CRC32(match_result[COMMAND_REGEX_INDEX].str().c_str());
 			labels[_hash] = j + 1;
 
-			//вычисляем количество запятых, если они есть:
+			//РІС‹С‡РёСЃР»СЏРµРј РєРѕР»РёС‡РµСЃС‚РІРѕ Р·Р°РїСЏС‚С‹С…, РµСЃР»Рё РѕРЅРё РµСЃС‚СЊ:
 			int commas = 0;
 			bool space = false;
 			for(int i=0;i<s.size();i++)
@@ -290,7 +290,7 @@ void Compiler::parseAllLabels(const char *path, map<longint, int> &labels)
 					space = true;
 					break;
 				}
-			//запятых, например 5, а разделяют они 6 элементов.
+			//Р·Р°РїСЏС‚С‹С…, РЅР°РїСЂРёРјРµСЂ 5, Р° СЂР°Р·РґРµР»СЏСЋС‚ РѕРЅРё 6 СЌР»РµРјРµРЅС‚РѕРІ.
 			if (commas > 0)
 			{
 				j += commas + 1;
@@ -394,7 +394,7 @@ void Compiler::parseUses(const string &line, CodeArray &codeArray, list<Register
 
 			curOperator->ProcessParsedLine(r, 0, codeArray, false);
 
-			//освобождаем память
+			//РѕСЃРІРѕР±РѕР¶РґР°РµРј РїР°РјСЏС‚СЊ
 			delete curOperator;
 
 		}

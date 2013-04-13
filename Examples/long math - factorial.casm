@@ -53,7 +53,7 @@ print uses cx, dx, bx:
 	
 		mget bh, cx
 		push bh
-		int 5h
+		int 4h
 		inc cx
 		
 	cmp cx, dx

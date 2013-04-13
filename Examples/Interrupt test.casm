@@ -1,0 +1,33 @@
+
+push 4849h
+int 04h ; Вывести байт как символ
+call newline
+
+push 4849h
+int 05h ; Вывести слово как два символа
+call newline
+
+push 4849h
+int 06h ; Вывести байт как число (DEC)
+call newline
+
+push 4849h
+int 07h ; Вывести слово как число (DEC)
+call newline
+
+mov bp, 1
+push 4849h 
+int 06h ; Вывести байт как число (HEX)
+call newline
+
+mov bp, 1
+push 4849h
+int 07h ; Вывести слово как число (HEX)
+call newline
+
+int 08h ; выход
+
+newline:
+push 0Ah
+int 04h
+ret

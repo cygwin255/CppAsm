@@ -6,6 +6,8 @@
 #include <iostream>
 #include "CodeArray.h"
 
+#include "Interrupt.h"
+
 class OpInt : public AsmOperator
 {
 public:
@@ -20,25 +22,12 @@ OpInt::OpInt()
 
 void OpInt::Do(const byte &b, Code &code, const RegisterWord &r)
 {
-	//RegisterWord r;
-	//Help::getWordFromStack(code, r);
-
-	RegisterWord out;
 	cout << uppercase;
-	/*
-	 * 0x0000 - прочесть байт как символ
-	 * 0х0001 - прочесть слово как символ
-	 * 0х0002 - прочесть байт
-	 * 0х0003 - прочесть слово
-	 * 0x0004 - вывести байт
-	 * 0х0005 - вывести слово
-	 * 0x0006 - вывести байт как символ
-	 * 0x0007 - вывести слово как 2 символа
-	 */
+
+	Interrupt::getInstance()->performInterrupt(r.getRightRegister(), code);
 
 
-
-	if (r.getValue() == 0x0000)
+/* if (r.getValue() == 0x0000)
 	{
 		char buf[1];
 		cin.read(buf, 1);
@@ -97,7 +86,7 @@ void OpInt::Do(const byte &b, Code &code, const RegisterWord &r)
 		Help::getWordFromStack(code, rg);
 
 		cout <<rg.getLeftRegister() << rg.getRightRegister();
-	}
+	}*/
 }
 
 void OpInt::ProcessParsedLine(const RegisterWord &regLeft, const RegisterWord &regRight, CodeArray &codeArray, bool isAltPush)

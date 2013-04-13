@@ -4,9 +4,7 @@
 
 #include "RegisterWord.h"
 #include "defs.h"
-#include "Stack.h"
 #include "CodeArray.h"
-//#include "AsmOperator.h"
 #include "Memory.h"
 #include "Debug.h"
 
@@ -34,10 +32,14 @@ public:
 
 	bool isGreaterFlag() const { return greaterFlag; }
 	void setGreaterFlag(bool val) { greaterFlag = val; }
+
+	void setExitProgram(bool val) { exit = val; }
+	bool isExitProgram() const { return exit; }
 private:
 	Debug deb;
 	bool zeroFlag;
 	bool greaterFlag;
+	bool exit;
 
 	bool debug;
 	RegisterWord registers[20];

@@ -32,10 +32,11 @@ void OpPush::Do(const byte &b, Code &code, const RegisterWord &reg)
 
 		int ip = code.getRegister(Help::SS).getValue() + code.getRegister(Help::SP).getValue();
 
-		if (r.leftright == -1)
+
+		if (r.leftright == 0)
 		{
-			*code.memory[ip] = 0;
-			*code.memory[ip + 1] = r.getLeftRegister();
+			*code.memory[ip] = r.getLeftRegister();
+			*code.memory[ip + 1] = r.getRightRegister();
 		}
 		else if (r.leftright == 1)
 		{
@@ -44,14 +45,11 @@ void OpPush::Do(const byte &b, Code &code, const RegisterWord &reg)
 		}
 		else
 		{
-			*code.memory[ip] = r.getLeftRegister();
-			*code.memory[ip + 1] = r.getRightRegister();
+			*code.memory[ip] = 0;
+			*code.memory[ip + 1] = r.getLeftRegister();
 		}
-// 		*code.memory[] = r.getLeftRegister();
-// 		code.getRegister(Help::SP) += 1;
-// 		*code.memory[code.getRegister(Help::SS).getValue() + code.getRegister(Help::SP).getValue()] = r.getRightRegister();
+
 		code.getRegister(Help::SP) += 2;
-		
 	}
 
 }

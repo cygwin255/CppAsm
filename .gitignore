@@ -23,6 +23,8 @@
 *.sdf
 *.suo
 *.user
+*.vsp
+*.obj
 
 # VS build folders
 Debug/

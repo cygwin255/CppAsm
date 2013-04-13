@@ -147,9 +147,8 @@ public:
 		int addr = code.getRegister(Help::SS).getValue() + code.getRegister(Help::SP).getValue();
 
 		r.setRightRegister(*code.memory[addr - 1]);
-		code.getRegister(Help::SP) += -1;
 		r.setLeftRegister(*code.memory[addr - 2]);
-		code.getRegister(Help::SP) += -1;
+		code.getRegister(Help::SP) -= 2;
 	}
 
 	static void putWordToStack(Code &code, const RegisterWord &reg)

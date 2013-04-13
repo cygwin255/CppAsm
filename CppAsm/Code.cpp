@@ -53,12 +53,13 @@ Code::Code(const char * path)
 	deb.setCode(this);
 	setZeroFlag(false);
 	setGreaterFlag(false);
+	exit = false;
 }
 
 void Code::Run()
 {
 	//цикл(т.е программа) выполняется до тех пор, пока счётчик команд не пересечёт границу DS, т.е данных
-	while(getRegister(Help::CS).getValue() + getRegister(Help::IP).getValue() < getRegister(Help::DS).getValue())
+	while( !isExitProgram() )
 	{
 		//абволютный адрес
 		int addr = getRegister(Help::CS).getValue() + getRegister(Help::IP).getValue();

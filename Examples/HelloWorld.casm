@@ -1,26 +1,18 @@
 hello db 'Hello, World!\n$'  
 
-mov ax, 10h
-cmp ax, 5h
-
 call print
 
-jmp exit
+int 8h
 
 print uses ax, bx:
 	mov ax, [hello]
 	print_loop:
 		mget bh, ax
-		cmp bh, 24h ; 24h - знак $
+		cmp bh, 24h ; 24h - $
 		jz print_loop_ex
 		push bh
-		int 6h
+		int 4h
 		inc ax
 	jmp print_loop
 	print_loop_ex:
 ret
-
-exit:
-
-
-

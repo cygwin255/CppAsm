@@ -14,15 +14,15 @@ lp:
 loop lp
 
 push ax
-int 5h
+int 7h
 	
 call new_line
 
-jmp exit
+int 8h
 
 new_line:
 	push 0Ah
-	int 6h
+	int 4h
 ret
 
 print:
@@ -32,10 +32,8 @@ print:
 		cmp bh, 24h
 		jz print_loop_ex
 		push bh
-		int 6h
+		int 4h
 		inc ax
 	jmp print_loop
 	print_loop_ex:
 ret
-
-exit:

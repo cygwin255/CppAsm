@@ -156,12 +156,17 @@ void Debug::DrawCodeAndStackState(int codeOffset)
 			//выводим тип оператора
 			m_stream << setw(6) << left << (current_op == codeOffset ? setfill(FILLER) : setfill(' ')) 
 				<< AsmOperator::Operators[command[0]];
+
+			//операторы без операндов - ret & nop
+			bool voidregister = (command[0] == Help::RET) || (command[0] == Help::NOP);
+
 			//проверка на ссылки, когда следует заменять операнд команды на соответствующий регистр
 			if (Help::isOnlyNumericOperator(command[0]))
 				m_stream << setw(registerWidth) << right << setfill('0') << r.getValue();
 			else
 				m_stream << setw(registerWidth) << right << (current_op == codeOffset ? setfill(FILLER) : setfill(' ')) 
-				<< AsmOperator::Registers[command[2]];
+				<< (voidregister ? "  " : AsmOperator::Registers[command[2]]);
+
 			//отступ для вывода стека
 			m_stream << (current_op == codeOffset ? setfill(FILLER) : setfill(' ')) << setw(38 - registerWidth + 2) 
 				<< VERTICAL_BAR << " ";
