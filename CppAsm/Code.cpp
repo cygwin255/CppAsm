@@ -53,7 +53,7 @@ Code::Code(const char * path)
 	deb.setCode(this);
 	setZeroFlag(false);
 	setGreaterFlag(false);
-	exit = false;
+	setExitProgram(false);
 }
 
 void Code::Run()
