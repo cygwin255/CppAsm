@@ -79,6 +79,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CmdLineArgHelper.cpp" />
     <ClCompile Include="CodeArray.cpp" />
     <ClCompile Include="Compiler.cpp" />
     <ClCompile Include="Debug.cpp" />
@@ -92,6 +93,7 @@
   <ItemGroup>
     <ClInclude Include="ADD.h" />
     <ClInclude Include="CALL.h" />
+    <ClInclude Include="CmdLineArgHelper.h" />
     <ClInclude Include="CMP.h" />
     <ClInclude Include="CodeArray.h" />
     <ClInclude Include="Compiler.h" />

@@ -1,77 +1,67 @@
 ﻿#include <iostream>
 #include <iomanip>
+#include <conio.h>
+
 
 #include "Code.h"
-
 #include "Compiler.h"
-#include <conio.h>
+#include "CmdLineArgHelper.h"
 
 using namespace std;
 
 
-int main(int argc, char *argv[])
+void printHelpMsg()
+{
+	cout << "Invalid input parametes" << endl;
+	cout << "usage: cppasm.exe -path <path> [-compile] [-run] [-debug]" << endl;
+	cout << "default flags: -compile -run" << endl << endl;
+	cout << "    -compile\tcompile program" << endl;
+	cout << "    -run\trun program" << endl;
+	cout << "    -debug\trun debugger" << endl;
+}
+
+
+int main(int argc, char **argv)
 {
 #ifndef _DEBUG
+
+
 
 	//проверяем правильность аргументов
 	if (argc == 1)
 	{
 		//если неправильное количество, то выводим подсказку
-		cout << "Invalid input parametes" << endl;
-		cout << "usage: cppasm.exe -path <path> [-compile] [-run] [-debug]" << endl;
-		cout << "default flags: -compile -run" << endl << endl;
-		cout << "    -compile\tcompile program" << endl;
-		cout << "    -run\trun program" << endl;
-		cout << "    -debug\trun debugger" << endl;
-
+		printHelpMsg();
 		system("pause");
 		return 1;
 	}
 
 	//определяем стандартные пути для загрузки и исполнения
-	string path = "";
+	string path(CmdLineArgHelper::findFlagParameter(argc, argv, "-path"));
 	string out_path = path;
 	out_path += ".obj";
 
 	//флаги
-	bool compile = false;
-	bool run = false;
-	bool debug = false;
+	bool compile = CmdLineArgHelper::findFlag(argc, argv, "-compile");
+	bool run = CmdLineArgHelper::findFlag(argc, argv, "-run");
+	bool debug = CmdLineArgHelper::findFlag(argc, argv, "-debug");
 
-	if (argc == 3)
+
+	if (!compile)
 	{
-		//флаги по умолчанию
-		compile = true;
-		run = true;
-		debug = false;
-
-		path = string(argv[2]);
+		if (run)
+			out_path = path; //если выставлен только запуск, то переопределяем путь запуска
+		else // или если флаги сняты
+			compile = run = true; // то, по умолчанию, включаем их
 	}
-	else
+	
+	if (!CmdLineArgHelper::isFileExists(path.c_str()))
 	{
-		//иначе ищем включенные флаги
-		for(int i=0;i<argc;i++)
-			if (string(argv[i]) == "-compile")
-				compile = true;
-			else if (string(argv[i]) == "-run")
-				run = true;
-			else if (string(argv[i]) == "-debug")
-				debug = true;
-			else if (string(argv[i]) == "-path")
-				path = string(argv[i + 1]);
-
-		//если выставлен только запуск, то переопределяем путь
-		if (!compile && run)
-			out_path = path;
-	}
-
-	//проверяем отсутствие -path
-	if(path.size() == 0)
-	{
-		cout << "Error! -path not found" << endl;
+		cout << "File " << path << " not found!";
+		system("pause");
 		return 1;
 	}
-
+	
 	//компиляция в байт-код
 	if (compile)
 		Compiler::getInstance()->Compile(path.c_str(), out_path.c_str());
