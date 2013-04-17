@@ -1,4 +1,4 @@
-#include "Code.h"
+п»ї#include "Code.h"
 #include "RegisterWord.h"
 #include "defs.h"
 #include "Help.h"
@@ -17,36 +17,36 @@ Code::Code(const char * path)
 	ifstream Input;
 	Input.open(path, ios::binary);
 
-	//вычисляем размер файла
+	//РІС‹С‡РёСЃР»СЏРµРј СЂР°Р·РјРµСЂ С„Р°Р№Р»Р°
 	Input.seekg (0, Input.end);
 	int length = Input.tellg();
 	Input.seekg (0, Input.beg);
 
-	//создаём буфер для считывания файла целиком
+	//СЃРѕР·РґР°С‘Рј Р±СѓС„РµСЂ РґР»СЏ СЃС‡РёС‚С‹РІР°РЅРёСЏ С„Р°Р№Р»Р° С†РµР»РёРєРѕРј
 	char *buffer = new char [length];
-	//считываем
+	//СЃС‡РёС‚С‹РІР°РµРј
 	Input.read(buffer, length);
-	//записываем информацию
+	//Р·Р°РїРёСЃС‹РІР°РµРј РёРЅС„РѕСЂРјР°С†РёСЋ
 	codeArray.Add(buffer, length);
-	//освобождаем память
+	//РѕСЃРІРѕР±РѕР¶РґР°РµРј РїР°РјСЏС‚СЊ
 	delete [] buffer;
 
 	Input.close();
 
-	//установка регистров
-	getRegister(Help::CS).setValue(0); // основной регистр кода
-	getRegister(Help::DS).setLeftRegister(*codeArray[0]); // основной регистр данных - первый байт
-	getRegister(Help::DS).setRightRegister(*codeArray[1]); // основной регистр данных - второй байт
+	//СѓСЃС‚Р°РЅРѕРІРєР° СЂРµРіРёСЃС‚СЂРѕРІ
+	getRegister(Help::CS).setValue(0); // РѕСЃРЅРѕРІРЅРѕР№ СЂРµРіРёСЃС‚СЂ РєРѕРґР°
+	getRegister(Help::DS).setLeftRegister(*codeArray[0]); // РѕСЃРЅРѕРІРЅРѕР№ СЂРµРіРёСЃС‚СЂ РґР°РЅРЅС‹С… - РїРµСЂРІС‹Р№ Р±Р°Р№С‚
+	getRegister(Help::DS).setRightRegister(*codeArray[1]); // РѕСЃРЅРѕРІРЅРѕР№ СЂРµРіРёСЃС‚СЂ РґР°РЅРЅС‹С… - РІС‚РѕСЂРѕР№ Р±Р°Р№С‚
 
-	//запись программы в виртуальную память, первый 2 байта пропускаем
+	//Р·Р°РїРёСЃСЊ РїСЂРѕРіСЂР°РјРјС‹ РІ РІРёСЂС‚СѓР°Р»СЊРЅСѓСЋ РїР°РјСЏС‚СЊ, РїРµСЂРІС‹Р№ 2 Р±Р°Р№С‚Р° РїСЂРѕРїСѓСЃРєР°РµРј
 	std::copy(codeArray[2], codeArray[codeArray.getSize()], memory[0]);
 
 	getRegister(Help::DS) -= 2;
 
-	//установка регистров
-	getRegister(Help::SS).setValue(codeArray.getSize()); // основной регистр стека
-	getRegister(Help::IP).setValue(0); // счётчик(регистр) команд
-	getRegister(Help::SP).setValue(0); // указатель на вершину стека
+	//СѓСЃС‚Р°РЅРѕРІРєР° СЂРµРіРёСЃС‚СЂРѕРІ
+	getRegister(Help::SS).setValue(codeArray.getSize()); // РѕСЃРЅРѕРІРЅРѕР№ СЂРµРіРёСЃС‚СЂ СЃС‚РµРєР°
+	getRegister(Help::IP).setValue(0); // СЃС‡С‘С‚С‡РёРє(СЂРµРіРёСЃС‚СЂ) РєРѕРјР°РЅРґ
+	getRegister(Help::SP).setValue(0); // СѓРєР°Р·Р°С‚РµР»СЊ РЅР° РІРµСЂС€РёРЅСѓ СЃС‚РµРєР°
 
 	deb.setCode(this);
 	setZeroFlag(false);
@@ -56,30 +56,30 @@ Code::Code(const char * path)
 
 void Code::Run()
 {
-	//цикл(т.е программа) выполняется до тех пор, пока счётчик команд не пересечёт границу DS, т.е данных
+	//С†РёРєР»(С‚.Рµ РїСЂРѕРіСЂР°РјРјР°) РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ РґРѕ С‚РµС… РїРѕСЂ, РїРѕРєР° СЃС‡С‘С‚С‡РёРє РєРѕРјР°РЅРґ РЅРµ РїРµСЂРµСЃРµС‡С‘С‚ РіСЂР°РЅРёС†Сѓ DS, С‚.Рµ РґР°РЅРЅС‹С…
 	while( !isExitProgram() )
 	{
-		//абволютный адрес
+		//Р°Р±РІРѕР»СЋС‚РЅС‹Р№ Р°РґСЂРµСЃ
 		int addr = getRegister(Help::CS).getValue() + getRegister(Help::IP).getValue();
 
 		if (isDebug())
 			deb.Update(addr);
 		
-		//заранее смещаем счётчик команд на 3(т.к каждая команда = 3 байта)
+		//Р·Р°СЂР°РЅРµРµ СЃРјРµС‰Р°РµРј СЃС‡С‘С‚С‡РёРє РєРѕРјР°РЅРґ РЅР° 3(С‚.Рє РєР°Р¶РґР°СЏ РєРѕРјР°РЅРґР° = 3 Р±Р°Р№С‚Р°)
 		getRegister(Help::IP) += 3;
-		//получаем код команды
+		//РїРѕР»СѓС‡Р°РµРј РєРѕРґ РєРѕРјР°РЅРґС‹
 		byte operation = *memory[addr++];
 
-		//считываем 2 байта - слово, эти данные передаются в команду
+		//СЃС‡РёС‚С‹РІР°РµРј 2 Р±Р°Р№С‚Р° - СЃР»РѕРІРѕ, СЌС‚Рё РґР°РЅРЅС‹Рµ РїРµСЂРµРґР°СЋС‚СЃСЏ РІ РєРѕРјР°РЅРґСѓ
 		RegisterWord reg;
 		reg.setLeftRegister(*memory[addr++]);
 		reg.setRightRegister(*memory[addr++]);
 
-		//получаем соответствующий оператор
+		//РїРѕР»СѓС‡Р°РµРј СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰РёР№ РѕРїРµСЂР°С‚РѕСЂ
 		AsmOperator *curOperator = AsmOperator::newOperator(operation);
-		//выполняем оператор
+		//РІС‹РїРѕР»РЅСЏРµРј РѕРїРµСЂР°С‚РѕСЂ
 		curOperator->Do(operation, *this, reg);
-		//освобождаем память
+		//РѕСЃРІРѕР±РѕР¶РґР°РµРј РїР°РјСЏС‚СЊ
 		delete curOperator;
 	}
 }
