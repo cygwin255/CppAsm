@@ -84,11 +84,13 @@ int Compiler::Compile( const char *LoadPath, const char *SavePath)
 	string rawData;
 
 	//парсим все данные
-	parseAllData(LoadPath, dataLabels, rawData);
+	parseAllData(Input, dataLabels, rawData);
 
 	//парсим все метки
-	parseAllLabels(LoadPath, labels);
+	parseAllLabels(Input, labels);
 
+	Input.seekg(ios::beg);
+	Input.clear();
 
 	while (!Input.eof())
 	{
@@ -170,18 +172,18 @@ int Compiler::Compile( const char *LoadPath, const char *SavePath)
 	return 1;
 }
 
-void Compiler::parseAllData(const char *path, map<longint, int> &dataLabels, string &rawData)
+void Compiler::parseAllData(istringstream &stream, map<longint, int> &dataLabels, string &rawData)
 {
-	ifstream Input;
-	Input.open(path);
+	stream.seekg(ios::beg);
+	stream.clear();
 
 	rawData = "";
 	char line[BUFFER_SIZE*16];
 	int currentPtr = 0;
 
-	while (!Input.eof())
+	while (!stream.eof())
 	{
-		Input.getline(line, BUFFER_SIZE, '\n');
+		stream.getline(line, BUFFER_SIZE, '\n');
 
 		smatch match_result;
 
@@ -203,8 +205,6 @@ void Compiler::parseAllData(const char *path, map<longint, int> &dataLabels, str
 		else 
 			parseFullDataArray(rawData, match_result, currentPtr);
 	}
-
-	Input.close();
 }
 
 void Compiler::parseNullDataArray(string &rawData, smatch &match_result, int &currentPtr)
@@ -252,19 +252,19 @@ void Compiler::parseFullDataArray(string &rawData, smatch &match_result, int &cu
 	}
 }
 
-void Compiler::parseAllLabels(const char *path, map<longint, int> &labels)
+void Compiler::parseAllLabels(istringstream &stream, map<longint, int> &labels)
 {
-	ifstream Input;
-	Input.open(path);
+	stream.seekg(ios::beg);
+	stream.clear();
 
 	char line[BUFFER_SIZE];
 
 	int j = 0;
 	int last_commas = 0;
 
-	while (!Input.eof())
+	while (!stream.eof())
 	{
-		Input.getline(line, BUFFER_SIZE, '\n');
+		stream.getline(line, BUFFER_SIZE, '\n');
 
 		smatch match_result;
 		
@@ -323,8 +323,6 @@ void Compiler::parseAllLabels(const char *path, map<longint, int> &labels)
 		if (math_result_cmd[RIGHT_OPERAND_REGEX_INDEX].str().length() != 0) 
 			j++;
 	}
-
-	Input.close();
 }
 
 void Compiler::parseRegisters(const smatch &match, RegisterWord &reg, int index, bool &altPush, bool &isLabel)
@@ -345,16 +343,16 @@ void Compiler::parseRegisters(const smatch &match, RegisterWord &reg, int index,
 
 void Compiler::readFile(const char *path, istringstream &stream)
 {
-	ifstream _Input(path);
+	ifstream input(path);
 
-	_Input.seekg (0, _Input.end);
-	int length = _Input.tellg();
-	_Input.seekg (0, _Input.beg);
+	input.seekg (0, input.end);
+	int length = input.tellg();
+	input.seekg (0, input.beg);
 
 	char *buffer = new char[length];
 
-	_Input.read(buffer, length);
-	_Input.close();
+	input.read(buffer, length);
+	input.close();
 
 	stream = istringstream(string(buffer)); 
 

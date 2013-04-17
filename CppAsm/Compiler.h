@@ -31,9 +31,9 @@ private:
 	
 	void parseUses(const string &, CodeArray &, list<RegisterWord> &);
 
-	void parseAllLabels(const char *, map<longint, int> &);
+	void parseAllLabels(istringstream &, map<longint, int> &);
 	void parseRegisters(const smatch &, RegisterWord &, int, bool &, bool &);
-	void parseAllData(const char *, map<longint, int> &, string &);
+	void parseAllData(istringstream &, map<longint, int> &, string &);
 
 	void parseNullDataArray(string &, smatch &, int &);
 	void parseDataString(string &, smatch &, int &);
