@@ -8,6 +8,9 @@
 #include "Memory.h"
 #include "Debug.h"
 
+
+#include <iterator>
+
 class AsmOperator;
 
 using namespace std;
@@ -15,6 +18,7 @@ using namespace std;
 class Code
 {
 public:
+
 	Code(const char *);
 
 	void Run();

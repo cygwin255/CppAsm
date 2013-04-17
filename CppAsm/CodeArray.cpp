@@ -1,5 +1,7 @@
 #include "CodeArray.h"
 
+#include <iterator>
+
 CodeArray::CodeArray()
 	: current(0)
 {
@@ -34,10 +36,7 @@ void CodeArray::Add(const char *ch, int len)
 
 char *CodeArray::operator[](int i)
 {
-	if (i >= 0 && i < current)
-		return &lines[i];
-
-	return 0;
+	return &lines[i];
 }
 
 int CodeArray::getSize() const

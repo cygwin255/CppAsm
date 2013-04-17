@@ -48,7 +48,7 @@ Compiler *Compiler::getInstance()
 		_instance = new Compiler();
 
 	return _instance;
-}
+}s
 
 //regular members:
 
@@ -61,7 +61,7 @@ int Compiler::Compile( const char *LoadPath, const char *SavePath)
 	//объявляем представление программы(объектного кода)
 	CodeArray codeArray;
 
-	//первое слово - указатель на сегмент данных, а пока резервируем место
+	//первое слово - указатель на сегмент данных, пока резервируем место
 	codeArray.Add(0);
 	codeArray.Add(0);
 
@@ -111,27 +111,27 @@ int Compiler::Compile( const char *LoadPath, const char *SavePath)
 
 		bool isLabel = true;
 		byte operation;
-		RegisterWord leftRegister;
-		RegisterWord rightRegister;
+		RegisterWord leftOperand;
+		RegisterWord rightOperand;
 
 		bool altPush = false;
 
 		//парсим код оператора
 		operation = Help::findInArray(AsmOperator::Operators, match_result[COMMAND_REGEX_INDEX].str().c_str());
 		//парсим левый операнд
-		parseRegisters(match_result, leftRegister, LEFT_OPERAND_REGEX_INDEX, altPush, isLabel);
+		parseRegisters(match_result, leftOperand, LEFT_OPERAND_REGEX_INDEX, altPush, isLabel);
 		//парсим правый операнд
-		parseRegisters(match_result, rightRegister, RIGHT_OPERAND_REGEX_INDEX, altPush, isLabel);
+		parseRegisters(match_result, rightOperand, RIGHT_OPERAND_REGEX_INDEX, altPush, isLabel);
 
 		//получаем текущий оператор при помощи фабрики
 		AsmOperator *curOperator = AsmOperator::newOperator(operation);
 		//проверяем, не переход ли это, если да, то присваиваем левому регистру адрес для перехода
 		if (isLabel && labels[Help::CRC32(match_result[LEFT_OPERAND_REGEX_INDEX].str().c_str())] != 0)
-			leftRegister.setValue(labels[Help::CRC32(match_result[LEFT_OPERAND_REGEX_INDEX].str().c_str())]*3 - 3);
+			leftOperand.setValue(labels[Help::CRC32(match_result[LEFT_OPERAND_REGEX_INDEX].str().c_str())]*3 - 3);
 
 		//аналогично, но только для ссылки на данные
 		if (dataLabels[Help::CRC32(match_result[LABEL_COMMAND_REGEX_INDEX].str().c_str())] != 0)
-			rightRegister.setValue(dataLabels[Help::CRC32(match_result[LABEL_COMMAND_REGEX_INDEX].str().c_str())] - 1);
+			rightOperand.setValue(dataLabels[Help::CRC32(match_result[LABEL_COMMAND_REGEX_INDEX].str().c_str())] - 1);
 
 		//проверяем, не нужно ли дописать push'ы для восстановления регистров
 		if (operation == Help::RET)
@@ -146,7 +146,7 @@ int Compiler::Compile( const char *LoadPath, const char *SavePath)
 			}
 
 		//записываем команду в объектный код
-		curOperator->ProcessParsedLine(leftRegister, rightRegister, codeArray, altPush);
+		curOperator->ProcessParsedLine(leftOperand, rightOperand, codeArray, altPush);
 
 		//освобождаем память
 		delete curOperator;

@@ -163,7 +163,9 @@ public:
 
 	static bool isOnlyNumericOperator(byte op)
 	{
-		return op == Help::INT ||op == Help::PUSH_ALT || op == Help::CALL || op == Help::CALL || op == Help::JZ || op == Help::JNZ || op == Help::JMP || op == Help::LOOP;
+		return op == Help::INT ||op == Help::PUSH_ALT || op == Help::CALL 
+			|| op == Help::CALL || op == Help::JZ || op == Help::JNZ 
+			|| op == Help::JMP || op == Help::LOOP;
 	}
 
 };

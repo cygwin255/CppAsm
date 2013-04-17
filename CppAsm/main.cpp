@@ -33,7 +33,7 @@ int main(int argc, char **argv)
 		//если неправильное количество, то выводим подсказку
 		printHelpMsg();
 		system("pause");
-		return 1;
+		return 0;
 	}
 
 	//определяем стандартные пути для загрузки и исполнения
@@ -59,7 +59,7 @@ int main(int argc, char **argv)
 	{
 		cout << "File " << path << " not found!";
 		system("pause");
-		return 1;
+		return 0;
 	}
 	
 	//компиляция в байт-код

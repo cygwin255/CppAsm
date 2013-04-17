@@ -4,9 +4,11 @@
 #include "Help.h"
 #include "AsmOperator.h"
 #include "Debug.h"
-#include <exception>
+
+
 #include <iostream>
 #include <fstream>
+#include <algorithm>
 
 using namespace std;
 
@@ -14,16 +16,14 @@ Code::Code(const char * path)
 {
 	ifstream Input;
 	Input.open(path, ios::binary);
-	//TODO: Добавить проверка на успешное открытие файла
-	if (!Input)
-		throw runtime_error("Invalid path");
+
 	//вычисляем размер файла
 	Input.seekg (0, Input.end);
 	int length = Input.tellg();
 	Input.seekg (0, Input.beg);
 
 	//создаём буфер для считывания файла целиком
-	char * buffer = new char [length];
+	char *buffer = new char [length];
 	//считываем
 	Input.read(buffer, length);
 	//записываем информацию
@@ -38,15 +38,13 @@ Code::Code(const char * path)
 	getRegister(Help::DS).setLeftRegister(*codeArray[0]); // основной регистр данных - первый байт
 	getRegister(Help::DS).setRightRegister(*codeArray[1]); // основной регистр данных - второй байт
 
-	//запись программы в виртуальную память
-	int i;
-	for(i=2;i<codeArray.getSize();i++)
-		*memory[i-2] = *codeArray[i];
+	//запись программы в виртуальную память, первый 2 байта пропускаем
+	std::copy(codeArray[2], codeArray[codeArray.getSize()], memory[0]);
 
 	getRegister(Help::DS) -= 2;
 
 	//установка регистров
-	getRegister(Help::SS).setValue(i); // основной регистр стека
+	getRegister(Help::SS).setValue(codeArray.getSize()); // основной регистр стека
 	getRegister(Help::IP).setValue(0); // счётчик(регистр) команд
 	getRegister(Help::SP).setValue(0); // указатель на вершину стека
 
