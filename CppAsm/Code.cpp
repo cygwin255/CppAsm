@@ -1,14 +1,14 @@
-﻿#include "Code.h"
+﻿#include <iostream>
+#include <fstream>
+#include <algorithm>
+
+
+#include "Code.h"
 #include "RegisterWord.h"
 #include "defs.h"
 #include "Help.h"
 #include "AsmOperator.h"
 #include "Debug.h"
-
-
-#include <iostream>
-#include <fstream>
-#include <algorithm>
 
 using namespace std;
 

@@ -4,7 +4,6 @@
 
 #include "defs.h"
 
-
 class RegisterWord
 {
 public:

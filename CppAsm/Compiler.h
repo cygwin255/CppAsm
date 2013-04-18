@@ -1,16 +1,17 @@
 #ifndef COMPILER_H
 #define COMPILER_H
 
-#include "defs.h"
-#include "RegisterWord.h"
-
 #include <regex>
 #include <map>
 #include <cstring>
-#include "CodeArray.h"
 #include <sstream>
 #include <list>
-using namespace std;
+
+
+#include "defs.h"
+#include "RegisterWord.h"
+#include "CodeArray.h"
+
 
 class Compiler
 {
@@ -27,17 +28,17 @@ private:
 	
 	//internal use only:
 
-	void readFile(const char *, istringstream &);
+	void readFile(const char *, std::istringstream &);
 	
-	void parseUses(const string &, CodeArray &, list<RegisterWord> &);
+	void parseUses(const std::string &, CodeArray &, std::list<RegisterWord> &);
 
-	void parseAllLabels(istringstream &, map<longint, int> &);
-	void parseRegisters(const smatch &, RegisterWord &, int, bool &, bool &);
-	void parseAllData(istringstream &, map<longint, int> &, string &);
+	void parseAllLabels(std::istringstream &, std::map<longint, int> &);
+	void parseRegisters(const std::smatch &, RegisterWord &, int, bool &, bool &);
+	void parseAllData(std::istringstream &, std::map<longint, int> &, std::string &);
 
-	void parseNullDataArray(string &, smatch &, int &);
-	void parseDataString(string &, smatch &, int &);
-	void parseFullDataArray(string &, smatch &, int &);
+	void parseNullDataArray(std::string &, std::smatch &, int &);
+	void parseDataString(std::string &, std::smatch &, int &);
+	void parseFullDataArray(std::string &, std::smatch &, int &);
 
 
 	//static const:
@@ -54,13 +55,13 @@ private:
 
 	static const int BUFFER_SIZE;
 
-	static const regex COMMAND_PARSE_REGEX;
-	static const regex LABEL_PARSE_REGEX;
-	static const regex DATA_PARSE_REGEX;
-	static const regex DATA_ARRAY_PARSE_REGEX;
-	static const regex REMOVE_COMMENTS_REGEX;
-	static const regex USES_PARSE_REGEX;
-	static const regex OPERATORS_LIST_PARSE_REGEX;
+	static const std::regex COMMAND_PARSE_REGEX;
+	static const std::regex LABEL_PARSE_REGEX;
+	static const std::regex DATA_PARSE_REGEX;
+	static const std::regex DATA_ARRAY_PARSE_REGEX;
+	static const std::regex REMOVE_COMMENTS_REGEX;
+	static const std::regex USES_PARSE_REGEX;
+	static const std::regex OPERATORS_LIST_PARSE_REGEX;
 };
 
 #endif

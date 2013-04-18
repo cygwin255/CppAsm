@@ -10,6 +10,15 @@ using namespace std;
 
 Interrupt *Interrupt::_instance = 0;
 
+Interrupt * Interrupt::getInstance()
+{
+	if (_instance == 0)
+		_instance = new Interrupt();
+
+	return _instance;
+}
+
+
 Interrupt::Interrupt()
 {
 	m_Functions[0] = &Interrupt::Int00h;
@@ -23,6 +32,7 @@ Interrupt::Interrupt()
 	m_Functions[8] = &Interrupt::Int08h;
 
 }
+
 
 void Interrupt::performInterrupt(const byte &id, Code &code)
 {

@@ -1,11 +1,9 @@
 #ifndef DEBUG_H
 #define DEBUG_H
 
-class Code;
-
 #include <sstream>
 
-using namespace std;
+class Code;
 
 class Debug
 {
@@ -18,7 +16,7 @@ public:
 	void setCode(Code *val) { m_code = val; }
 
 private:
-	ostringstream m_stream;
+	std::ostringstream m_stream;
 	Code *m_code;
 
 	int m_waitAddress;

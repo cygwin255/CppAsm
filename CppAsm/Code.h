@@ -8,12 +8,7 @@
 #include "Memory.h"
 #include "Debug.h"
 
-
-#include <iterator>
-
 class AsmOperator;
-
-using namespace std;
 
 class Code
 {

@@ -1,11 +1,12 @@
 #ifndef INT_H
 #define INT_H
 
+#include <iostream>
+
+
 #include "AsmOperator.h"
 #include "defs.h"
-#include <iostream>
 #include "CodeArray.h"
-
 #include "Interrupt.h"
 
 class OpInt : public AsmOperator

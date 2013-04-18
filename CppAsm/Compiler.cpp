@@ -1,9 +1,4 @@
 ﻿#include "Compiler.h"
-#include "CodeArray.h"
-#include "defs.h"
-#include "Help.h"
-#include "AsmOperator.h"
-
 #include <fstream>
 #include <regex>
 #include <map>
@@ -11,6 +6,11 @@
 #include <cstdlib>
 #include <sstream>
 #include <list>
+
+#include "CodeArray.h"
+#include "defs.h"
+#include "Help.h"
+#include "AsmOperator.h"
 
 using namespace std;
 
@@ -48,7 +48,7 @@ Compiler *Compiler::getInstance()
 		_instance = new Compiler();
 
 	return _instance;
-}s
+}
 
 //regular members:
 

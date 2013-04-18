@@ -1,7 +1,6 @@
 #include "RegisterWord.h"
 
 
-
 RegisterWord::RegisterWord(word in)
 {
 	leftright = 0;
