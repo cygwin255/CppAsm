@@ -3,7 +3,6 @@
 
 #include "AsmOperator.h"
 #include "defs.h"
-
 #include "CodeArray.h"
 
 class OpMget : public AsmOperator

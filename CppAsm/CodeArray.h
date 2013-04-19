@@ -13,14 +13,14 @@ public:
 	void Add(char, const RegisterWord &);
 	void Add(const char *, int);
 
-	void SetAt(int, byte);
+	void SetAt(size_t, byte);
 
-	int getSize() const;
+	size_t getSize() const;
 
 	char *operator[](int);
 private:
 	char lines[1024*128];
-	int current;
+	size_t current;
 };
 
 #endif

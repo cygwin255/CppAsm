@@ -160,11 +160,11 @@ int Compiler::Compile( const char *LoadPath, const char *SavePath)
 
 	ofstream Output(SavePath, ios::out | ios::binary);
 	//записываем код программы
-	for (int i=0;i<codeArray.getSize();++i)
+	for (size_t i=0;i<codeArray.getSize();++i)
 		Output.write(codeArray[i], 1);
 
 	//записываем код данных
-	for(int i=0;i<rawData.size();i++)
+	for(size_t i=0;i<rawData.size();i++)
 		Output.write(&rawData[i], 1);
 
 	Output.close();

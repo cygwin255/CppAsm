@@ -23,7 +23,7 @@ OpInt::OpInt()
 
 void OpInt::Do(const byte &b, Code &code, const RegisterWord &r)
 {
-	cout << uppercase;
+	std::cout << std::uppercase;
 
 	Interrupt::getInstance()->performInterrupt(r.getRightRegister(), code);
 }

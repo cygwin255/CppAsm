@@ -9,15 +9,15 @@ public:
 	Memory(int = 65536);
 	~Memory();
 	
-	char *operator[](int);
+	char *operator[](size_t);
 
-	void read(int , byte *, int);
+	void read(size_t , byte *, size_t);
 
-	int getSize();
+	size_t getSize();
 
 private:
 	char *memory;
-	int size;
+	size_t size;
 };
 
 #endif

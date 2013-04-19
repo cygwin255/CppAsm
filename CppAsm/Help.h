@@ -10,10 +10,8 @@
 #include "RegisterWord.h"
 #include "Code.h"
 
-class Help
+namespace Help
 {
-public:
-
 	static const char MOV = 0x00;
 	static const char ADD = 0x01;
 	static const char SUB = 0x02;

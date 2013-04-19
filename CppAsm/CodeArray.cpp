@@ -39,12 +39,12 @@ char *CodeArray::operator[](int i)
 	return &lines[i];
 }
 
-int CodeArray::getSize() const
+size_t CodeArray::getSize() const
 {
 	return current;
 }
 
-void CodeArray::SetAt(int position, byte c)
+void CodeArray::SetAt(size_t position, byte c)
 {
 	lines[position] = c;
 }
