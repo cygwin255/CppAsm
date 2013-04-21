@@ -56,7 +56,7 @@ void OpPush::Do(const byte &b, Code &code, const RegisterWord &reg)
 
 void OpPush::ProcessParsedLine(const RegisterWord &regLeft, const RegisterWord &regRight, CodeArray &codeArray, bool isAltPush)
 {
-	codeArray.Add(isAltPush ? Help::PUSH_ALT : Help::PUSH, regLeft);
+	codeArray.Add(isAltPush ? Help::PUSH_ALT : Help::PUSH, regRight.getValue() == 0 ? regLeft : regRight);
 }
 
 

@@ -21,7 +21,6 @@ void Memory::read(size_t from, byte * buffer, size_t count)
 {
 	for(int i=0;i<count;i++)
 		buffer[i] = memory[from + i];
-	
 }
 
 size_t Memory::getSize()

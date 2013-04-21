@@ -1,12 +1,6 @@
-#ifndef CMD_HELP_H
-#define CMD_HELP_H
-
-class CmdLineArgHelper
+namespace CmdLineArgHelper
 {
-public:
-	static bool findFlag(int, char **, const char *);
-	static const char *findFlagParameter(int, char **, const char *);
-	static bool isFileExists(const char *);
+	bool findFlag(int, char **, const char *);
+	const char *findFlagParameter(int, char **, const char *);
+	bool isFileExists(const char *);
 };
-
-#endif

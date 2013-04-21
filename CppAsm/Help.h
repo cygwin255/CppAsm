@@ -4,7 +4,6 @@
 
 #include <cstring>
 #include <cmath>
-#include <exception>
 #include <vector>
 
 #include "RegisterWord.h"

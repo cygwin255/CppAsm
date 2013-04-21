@@ -24,9 +24,6 @@ void printHelpMsg()
 int main(int argc, char **argv)
 {
 #ifndef _DEBUG
-
-
-
 	//проверяем правильность аргументов
 	if (argc == 1)
 	{
@@ -76,11 +73,10 @@ int main(int argc, char **argv)
 #else
 	Compiler::getInstance()->Compile("..\\Examples\\HelloWorld.casm", "..\\Examples\\HelloWorld.obj");
 	Code code("..\\Examples\\HelloWorld.obj");
+	code.setDebug(false);
 	code.Run();
 #endif
-	
 
-	
 	cout << endl << "Press ESC to exit";
 #ifndef _DEBUG
 	while(_getch() != 27);

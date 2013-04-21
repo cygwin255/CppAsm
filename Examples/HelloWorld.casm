@@ -1,5 +1,5 @@
 hello db 'Hello, World!\n$'  
-
+push [hello]
 call print
 
 int 8h

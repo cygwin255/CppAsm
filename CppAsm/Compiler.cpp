@@ -12,6 +12,9 @@
 #include "Help.h"
 #include "AsmOperator.h"
 
+#include <iostream>
+
+
 using namespace std;
 
 Compiler *Compiler::_instance = 0;
@@ -32,7 +35,7 @@ const int Compiler::USES_REGEX_INDEX = 3;
 
 const int Compiler::BUFFER_SIZE = 256;
 
-const regex Compiler::COMMAND_PARSE_REGEX("^[ \t]*([a-zA-Z]+) *([0-9a-fA-F]{2,}(h|[ \t]*$)?|[a-zA-Z0-9_-]{2,}|[ \t]*$)([ \t]*,[ \t]*([a-zA-Z]{2}|[0-9a-fA-F]+h?|\\[([a-zA-Z0-9]+)\\][ \t]*$)|[ \t]*$)");
+const regex Compiler::COMMAND_PARSE_REGEX("^[ \t]*([a-zA-Z]+) *([0-9a-fA-F]{1,}(h|[ \t]*$)?|[a-zA-Z0-9_-]{2,}|[ \t]*$)([ \t]*,[ \t]*([a-zA-Z]{2}|[0-9a-fA-F]+h?|\\[([a-zA-Z0-9]+)\\][ \t]*$)|[ \t]*$)");
 const regex Compiler::LABEL_PARSE_REGEX("^[ \t]*([a-zA-Z0-9_-]{1,}): *$");
 const regex Compiler::DATA_PARSE_REGEX("^[ \t]*([a-zA-Z0-9]+)[ \t]*d(b|w)[ \t]*('(.+)'|([a-fA-F0-9]+h{0,}[ \t]*(,| *$)+[ \t]*)+|\\[([a-fA-F0-9]+h?)\\])[ \t]*$");
 const regex Compiler::DATA_ARRAY_PARSE_REGEX("[a-fA-F0-9]*h?");
@@ -89,8 +92,8 @@ int Compiler::Compile( const char *LoadPath, const char *SavePath)
 	//парсим все метки
 	parseAllLabels(Input, labels);
 
-	Input.seekg(ios::beg);
 	Input.clear();
+	Input.seekg(ios::beg);
 
 	while (!Input.eof())
 	{
@@ -108,6 +111,12 @@ int Compiler::Compile( const char *LoadPath, const char *SavePath)
 			parseUses(line, codeArray, usesParams);
 			continue;
 		}
+
+
+
+
+
+
 
 		bool isLabel = true;
 		byte operation;
@@ -174,8 +183,8 @@ int Compiler::Compile( const char *LoadPath, const char *SavePath)
 
 void Compiler::parseAllData(istringstream &stream, map<longint, int> &dataLabels, string &rawData)
 {
-	stream.seekg(ios::beg);
 	stream.clear();
+	stream.seekg(ios::beg);
 
 	rawData = "";
 	char line[BUFFER_SIZE*16];
@@ -254,8 +263,9 @@ void Compiler::parseFullDataArray(string &rawData, smatch &match_result, int &cu
 
 void Compiler::parseAllLabels(istringstream &stream, map<longint, int> &labels)
 {
-	stream.seekg(ios::beg);
 	stream.clear();
+	stream.seekg(ios::beg);
+	
 
 	char line[BUFFER_SIZE];
 

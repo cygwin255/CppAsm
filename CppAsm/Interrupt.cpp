@@ -35,10 +35,7 @@ Interrupt::Interrupt()
 
 
 void Interrupt::performInterrupt(const byte &id, Code &code)
-{
-	if (m_Functions[id] == 0)
-		throw runtime_error("id not found in Interrupt::performInterrupt");
-		
+{		
 	(this->*m_Functions[id])(code);
 }
 /* === :: Регистр BP :: ===
