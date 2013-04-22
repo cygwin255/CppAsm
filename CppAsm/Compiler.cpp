@@ -35,6 +35,8 @@ const int Compiler::USES_REGEX_INDEX = 3;
 
 const int Compiler::BUFFER_SIZE = 256;
 
+//шаманские регулярки
+//Не стоит менять {1,} на +, у данной реализации с ним проблемы, нужно сделать через boost
 const regex Compiler::COMMAND_PARSE_REGEX("^[ \t]*([a-zA-Z]+) *([0-9a-fA-F]{1,}(h|[ \t]*$)?|[a-zA-Z0-9_-]{2,}|[ \t]*$)([ \t]*,[ \t]*([a-zA-Z]{2}|[0-9a-fA-F]+h?|\\[([a-zA-Z0-9]+)\\][ \t]*$)|[ \t]*$)");
 const regex Compiler::LABEL_PARSE_REGEX("^[ \t]*([a-zA-Z0-9_-]{1,}): *$");
 const regex Compiler::DATA_PARSE_REGEX("^[ \t]*([a-zA-Z0-9]+)[ \t]*d(b|w)[ \t]*('(.+)'|([a-fA-F0-9]+h{0,}[ \t]*(,| *$)+[ \t]*)+|\\[([a-fA-F0-9]+h?)\\])[ \t]*$");
@@ -111,12 +113,6 @@ int Compiler::Compile( const char *LoadPath, const char *SavePath)
 			parseUses(line, codeArray, usesParams);
 			continue;
 		}
-
-
-
-
-
-
 
 		bool isLabel = true;
 		byte operation;

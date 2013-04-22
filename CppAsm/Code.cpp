@@ -41,6 +41,7 @@ Code::Code(const char * path)
 	//запись программы в виртуальную память, первый 2 байта пропускаем
 	std::copy(codeArray[2], codeArray[codeArray.getSize()], memory[0]);
 
+	//первые два байта не в счёт
 	getRegister(Help::DS) -= 2;
 
 	//установка регистров

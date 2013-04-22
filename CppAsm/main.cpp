@@ -51,7 +51,8 @@ int main(int argc, char **argv)
 		else // или если флаги сняты
 			compile = run = true; // то, по умолчанию, включаем их
 	}
-	
+
+	//проверяем файл на существование
 	if (!CmdLineArgHelper::isFileExists(path.c_str()))
 	{
 		cout << "File " << path << " not found!";

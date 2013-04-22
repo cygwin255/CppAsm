@@ -39,7 +39,9 @@ AsmOperator::AsmOperator()
 
 AsmOperator *AsmOperator::newOperator(byte opcode)
 {
-
+	//TODO: переделать через статические переменные,
+	//нет нужды каждый раз выделять память
+	//и потом её освобождать
 	AsmOperator *op;
 
 #pragma region switch
