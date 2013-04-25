@@ -30,9 +30,9 @@ private:
 
 	void readFile(const char *, std::istringstream &);
 	
-	void parseUses(const std::string &, CodeArray &, std::list<RegisterWord> &);
+	bool parseUses(const std::string &, CodeArray &, std::list<RegisterWord> &);
 
-	void parseAllLabels(std::istringstream &, std::map<longint, int> &);
+	void parseAllLabels(std::istringstream &, std::map<longint, int> &, std::map<int, std::map<longint, int> > &);
 	void parseRegisters(const std::smatch &, RegisterWord &, int, bool &, bool &);
 	void parseAllData(std::istringstream &, std::map<longint, int> &, std::string &);
 
