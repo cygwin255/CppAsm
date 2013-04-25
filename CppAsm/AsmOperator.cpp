@@ -1,4 +1,4 @@
-п»ї#include "AsmOperator.h"
+#include "AsmOperator.h"
 
 #include "ADD.h"
 #include "CMP.h"
@@ -39,9 +39,9 @@ AsmOperator::AsmOperator()
 
 AsmOperator *AsmOperator::newOperator(byte opcode)
 {
-	//TODO: РїРµСЂРµРґРµР»Р°С‚СЊ С‡РµСЂРµР· СЃС‚Р°С‚РёС‡РµСЃРєРёРµ РїРµСЂРµРјРµРЅРЅС‹Рµ,
-	//РЅРµС‚ РЅСѓР¶РґС‹ РєР°Р¶РґС‹Р№ СЂР°Р· РІС‹РґРµР»СЏС‚СЊ РїР°РјСЏС‚СЊ
-	//Рё РїРѕС‚РѕРј РµС‘ РѕСЃРІРѕР±РѕР¶РґР°С‚СЊ
+	//TODO: переделать через статические переменные,
+	//нет нужды каждый раз выделять память
+	//и потом её освобождать
 	AsmOperator *op;
 
 #pragma region switch

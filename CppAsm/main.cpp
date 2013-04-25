@@ -72,7 +72,7 @@ int main(int argc, char **argv)
 		code.Run();
 	}
 #else
-	Compiler::getInstance()->Compile("d:\\Media\\work\\git\\CppAsm\\Release\\test1.casm", "..\\Examples\\HelloWorld.obj");
+	Compiler::getInstance()->Compile("..\\Examples\\HelloWorld.casm", "..\\Examples\\HelloWorld.obj");
 	Code code("..\\Examples\\HelloWorld.obj");
 	code.setDebug(false);
 	code.Run();

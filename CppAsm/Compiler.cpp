@@ -91,14 +91,8 @@ int Compiler::Compile( const char *LoadPath, const char *SavePath)
 	//парсим все данные
 	parseAllData(Input, dataLabels, rawData);
 
-	//отдельные метки для каждой функции
-	map<int, map<longint, int> > func_labels;
-
 	//парсим все метки
-	parseAllLabels(Input, labels, func_labels);
-
-	bool inside_func = false;
-	longint func_hash;
+	parseAllLabels(Input, labels);
 
 	Input.clear();
 	Input.seekg(ios::beg);
@@ -116,11 +110,7 @@ int Compiler::Compile( const char *LoadPath, const char *SavePath)
 		regex_match (s.cbegin(), s.cend(), match_result, COMMAND_PARSE_REGEX);
 		if (match_result.empty())
 		{
-			if (parseUses(line, codeArray, usesParams))
-			{
-				inside_func = true;
-				func_hash = Help::CRC32(match_result[LEFT_OPERAND_REGEX_INDEX].str().c_str());
-			}
+			parseUses(line, codeArray, usesParams);
 			continue;
 		}
 
@@ -140,18 +130,9 @@ int Compiler::Compile( const char *LoadPath, const char *SavePath)
 
 		//получаем текущий оператор при помощи фабрики
 		AsmOperator *curOperator = AsmOperator::newOperator(operation);
-
 		//проверяем, не переход ли это, если да, то присваиваем левому регистру адрес для перехода
-		if (isLabel)
-		{
-			int tmp1 = func_labels[func_hash][Help::CRC32(match_result[LEFT_OPERAND_REGEX_INDEX].str().c_str())];
-			int tmp2 = labels[Help::CRC32(match_result[LEFT_OPERAND_REGEX_INDEX].str().c_str())];
-
-			if (inside_func && tmp1 != 0)
-				leftOperand.setValue(tmp1*3-3);
-			if (!inside_func && tmp2 != 0)
-				leftOperand.setValue(tmp2*3 - 3);
-		}
+		if (isLabel && labels[Help::CRC32(match_result[LEFT_OPERAND_REGEX_INDEX].str().c_str())] != 0)
+			leftOperand.setValue(labels[Help::CRC32(match_result[LEFT_OPERAND_REGEX_INDEX].str().c_str())]*3 - 3);
 
 		//аналогично, но только для ссылки на данные
 		if (dataLabels[Help::CRC32(match_result[LABEL_COMMAND_REGEX_INDEX].str().c_str())] != 0)
@@ -159,9 +140,6 @@ int Compiler::Compile( const char *LoadPath, const char *SavePath)
 
 		//проверяем, не нужно ли дописать push'ы для восстановления регистров
 		if (operation == Help::RET)
-		{
-			inside_func = false;
-
 			while (usesParams.size() > 0)
 			{
 				AsmOperator *_curOperator = AsmOperator::newOperator(Help::POP);
@@ -171,7 +149,6 @@ int Compiler::Compile( const char *LoadPath, const char *SavePath)
 				//освобождаем память
 				delete _curOperator;
 			}
-		}
 
 		//записываем команду в объектный код
 		curOperator->ProcessParsedLine(leftOperand, rightOperand, codeArray, altPush);
@@ -280,20 +257,16 @@ void Compiler::parseFullDataArray(string &rawData, smatch &match_result, int &cu
 	}
 }
 
-void Compiler::parseAllLabels(istringstream &stream, map<longint, int> &labels, 
-	map<int, map<longint, int> > &func_labels)
+void Compiler::parseAllLabels(istringstream &stream, map<longint, int> &labels)
 {
 	stream.clear();
 	stream.seekg(ios::beg);
+	
 
 	char line[BUFFER_SIZE];
 
 	int j = 0;
 	int last_commas = 0;
-
-	bool inside_function = false;
-	int total_func_count = 0;
-	longint current_func_hash;
 
 	while (!stream.eof())
 	{
@@ -309,30 +282,18 @@ void Compiler::parseAllLabels(istringstream &stream, map<longint, int> &labels,
 		if (match_result[COMMAND_REGEX_INDEX].str().length() != 0)
 		{ 
 			//добавляем хэш надписи в мап, связываем его с адрессом команд
-			longint _hash = Help::CRC32(match_result[COMMAND_REGEX_INDEX].str().c_str());;
-
-			int offset = j + 1;
-
-			if (inside_function)
-				func_labels[current_func_hash][_hash] = offset;
-			else
-				labels[_hash] = offset;
+			longint _hash = Help::CRC32(match_result[COMMAND_REGEX_INDEX].str().c_str());
+			labels[_hash] = j + 1;
 
 			//вычисляем количество запятых, если они есть:
 			int commas = 0;
 			bool space = false;
-
 			for(int i=0;i<s.size();i++)
-				if (s[i] == ',') 
-					commas++;
-
+				if (s[i] == ',') commas++;
 			for(int i=0;i<s.size();i++)
 				if (s[i] == ' ')
 				{
 					space = true;
-					inside_function = true;
-					total_func_count += 1;
-					current_func_hash = _hash;
 					break;
 				}
 			//запятых, например 5, а разделяют они 6 элементов.
@@ -361,10 +322,7 @@ void Compiler::parseAllLabels(istringstream &stream, map<longint, int> &labels,
 		int operation = Help::findInArray(AsmOperator::Operators, math_result_cmd[COMMAND_REGEX_INDEX].str().c_str());
 
 		if (operation == Help::RET)
-		{
 			j += last_commas;
-			inside_function = false;
-		}
 
 		if (math_result_cmd[COMMAND_REGEX_INDEX].str().length() != 0) 
 			j++;
@@ -407,7 +365,7 @@ void Compiler::readFile(const char *path, istringstream &stream)
 	delete [] buffer;
 }
 
-bool Compiler::parseUses(const string &line, CodeArray &codeArray, list<RegisterWord> &usesParams)
+void Compiler::parseUses(const string &line, CodeArray &codeArray, list<RegisterWord> &usesParams)
 {
 	string toParse;
 	
@@ -417,7 +375,7 @@ bool Compiler::parseUses(const string &line, CodeArray &codeArray, list<Register
 	toParse = string(match_result[USES_REGEX_INDEX].str());
 
 	if (match_result.empty() || toParse.size() == 0) 
-		return false;
+		return;
 
 
 	static const sregex_token_iterator rend;
@@ -447,5 +405,4 @@ bool Compiler::parseUses(const string &line, CodeArray &codeArray, list<Register
 		a++;
 	}
 
-	return true;
 }

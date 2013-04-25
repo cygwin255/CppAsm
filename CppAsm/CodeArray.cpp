@@ -1,4 +1,4 @@
-﻿#include "CodeArray.h"
+#include "CodeArray.h"
 
 #include <iterator>
 

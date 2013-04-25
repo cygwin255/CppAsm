@@ -1,4 +1,4 @@
-п»ї#include <cstdlib>
+#include <cstdlib>
 #include <time.h>
 
 #include "Memory.h"
@@ -9,10 +9,10 @@ Memory::Memory(int size)
 	Memory::size = size > 0 ? size : 65536;
 	memory = new char[Memory::size];
 
-	//Р·Р°РґР°С‘Рј СЃР»СѓС‡Р°Р№РЅС‹Р№ СЃРёРґ
+	//задаём случайный сид
 	srand (time(NULL));
 
-	//СЃРёРјСѓР»РёСЂСѓРµРј Р·Р°РїРѕР»РЅРµРЅРёРµ РїР°РјСЏС‚Рё РїСЂРѕРёР·РІРѕР»СЊРЅС‹РјРё РґР°РЅРЅС‹РјРё
+	//симулируем заполнение памяти произвольными данными
 	for(int i=0;i<size;++i)
 		memory[i] = rand() % 256;
 }
