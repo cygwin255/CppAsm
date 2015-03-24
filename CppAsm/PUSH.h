@@ -30,7 +30,7 @@ void OpPush::Do(const byte &b, Code &code, const RegisterWord &reg)
 
 		RegisterWord r = code.getRegister(reg.getRightRegister());
 
-		int ip = code.getRegister(Help::SS).getValue() + code.getRegister(Help::SP).getValue();
+		int ip = (code.getRegister(Help::SS).getValue() << 4) + code.getRegister(Help::SP).getValue();
 
 
 		if (r.leftright == 0)

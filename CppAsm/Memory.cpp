@@ -4,16 +4,15 @@
 #include "Memory.h"
 #include "defs.h"
 
-Memory::Memory(int size)
+Memory::Memory()
 {
-	Memory::size = size > 0 ? size : 65536;
 	memory = new char[Memory::size];
 
 	//задаём случайный сид
 	srand (time(NULL));
 
 	//симулируем заполнение памяти произвольными данными
-	for(int i=0;i<size;++i)
+	for(int i=0;i<Memory::size;++i)
 		memory[i] = rand() % 256;
 }
 

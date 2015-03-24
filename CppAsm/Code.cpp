@@ -34,18 +34,22 @@ Code::Code(const char * path)
 	Input.close();
 
 	//установка регистров
-	getRegister(Help::CS).setValue(0); // основной регистр кода
-	getRegister(Help::DS).setLeftRegister(*codeArray[0]); // основной регистр данных - первый байт
-	getRegister(Help::DS).setRightRegister(*codeArray[1]); // основной регистр данных - второй байт
+	getRegister(Help::CS).setValue(0x0000); // сегмент кода
+	getRegister(Help::DS).setValue(0x1000); // сегмент данных
+
+	int ptr = ((byte)*codeArray[0] << 2) + (byte)*codeArray[1];
 
 	//запись программы в виртуальную память, первый 2 байта пропускаем
-	std::copy(codeArray[2], codeArray[codeArray.getSize()], memory[0]);
+	std::copy(codeArray[2], codeArray[ptr], memory[getRegister(Help::CS).getValue() << 4]);
 
-	//первые два байта не в счёт
-	getRegister(Help::DS) -= 2;
+	int t = getRegister(Help::DS).getValue() << 4;
+
+	std::copy(codeArray[ptr], codeArray[length], memory[getRegister(Help::DS).getValue() << 4]);
+
+	
 
 	//установка регистров
-	getRegister(Help::SS).setValue(codeArray.getSize()); // основной регистр стека
+	getRegister(Help::SS).setValue(0x2000); // основной регистр стека
 	getRegister(Help::IP).setValue(0); // счётчик(регистр) команд
 	getRegister(Help::SP).setValue(0); // указатель на вершину стека
 
@@ -53,6 +57,9 @@ Code::Code(const char * path)
 	setZeroFlag(false);
 	setGreaterFlag(false);
 	setExitProgram(false);
+
+
+
 }
 
 void Code::Run()
@@ -60,8 +67,8 @@ void Code::Run()
 	//цикл(т.е программа) выполняется до тех пор, пока счётчик команд не пересечёт границу DS, т.е данных
 	while( !isExitProgram() )
 	{
-		//абволютный адрес
-		int addr = getRegister(Help::CS).getValue() + getRegister(Help::IP).getValue();
+		//абcолютный адрес
+		int addr = ((byte)getRegister(Help::CS).getValue() << 4) + (byte)getRegister(Help::IP).getValue();
 
 		if (isDebug())
 			deb.Update(addr);

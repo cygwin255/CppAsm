@@ -100,34 +100,41 @@ void Interrupt::Int04h(Code &code)
 	RegisterWord reg;
 	Help::getWordFromStack(code, reg);
 
-	cout << reg.getRightRegister();
+	if (!code.isTrapFlag())
+		cout << reg.getRightRegister();
 }
 void Interrupt::Int05h(Code &code)
 {
 	RegisterWord reg;
 	Help::getWordFromStack(code, reg);
-
-	cout << reg.getLeftRegister() << reg.getRightRegister();
+	
+	if (!code.isTrapFlag())
+		cout << reg.getLeftRegister() << reg.getRightRegister();
 }
 void Interrupt::Int06h(Code &code)
 {
 	RegisterWord reg;
 	Help::getWordFromStack(code, reg);
 
-	if (code.getRegister(Help::BP).getRightRegister() == 0x01)
-		cout << hex;
-
-	cout << (int)reg.getRightRegister();
+	if (!code.isTrapFlag())
+	{
+		if (code.getRegister(Help::BP).getRightRegister() == 0x01)
+			cout << hex;
+	
+		cout << (int)reg.getRightRegister();
+	}
 }
 void Interrupt::Int07h(Code &code)
 {
 	RegisterWord reg;
 	Help::getWordFromStack(code, reg);
+	if (!code.isTrapFlag())
+	{
+		if (code.getRegister(Help::BP).getRightRegister() == 0x01)
+			cout << hex;
 
-	if (code.getRegister(Help::BP).getRightRegister() == 0x01)
-		cout << hex;
-
-	cout << reg.getValue();
+		cout << reg.getValue();
+	}
 }
 void Interrupt::Int08h(Code &code)
 {

@@ -26,11 +26,14 @@ public:
 	bool isZeroFlag() const { return zeroFlag; }
 	void setZeroFlag(bool val) { zeroFlag = val; }
 	
-	bool isDebug() const { return debug; }
-	void setDebug(bool val) { debug = val; }
+	bool isDebug() const { return debugFlag; }
+	void setDebug(bool val) { debugFlag = val; }
 
 	bool isGreaterFlag() const { return greaterFlag; }
 	void setGreaterFlag(bool val) { greaterFlag = val; }
+
+	bool isTrapFlag() const { return isDebug(); }
+	void setTrapFlag(bool val) { setDebug(val); }
 
 	void setExitProgram(bool val) { exit = val; }
 	bool isExitProgram() const { return exit; }
@@ -38,10 +41,10 @@ private:
 	Debug deb;
 	bool zeroFlag;
 	bool greaterFlag;
+	bool debugFlag;
 	bool exit;
 
-	bool debug;
-	RegisterWord registers[20];
+	RegisterWord registers[21];
 };
 
 

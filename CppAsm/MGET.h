@@ -22,7 +22,7 @@ void OpMget::Do(const byte &b, Code &code, const RegisterWord &reg)
 	RegisterWord offset;
 	Help::getWordFromStack(code, offset);
 
-	int ds = code.getRegister(Help::DS).getValue() + offset.getValue();
+	int ds = (code.getRegister(Help::DS).getValue() << 4) + offset.getValue();
 	
 	RegisterWord *refer = &code.getRegister(reg.getRightRegister());
 

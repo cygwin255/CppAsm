@@ -99,8 +99,9 @@ void Debug::DrawRegistersState()
 				<< ' ' << VERTICAL_BAR << ' ';
 		if (i == 0)
 		{
+			m_stream << "TF " << noboolalpha << m_code->isTrapFlag() << " " << VERTICAL_BAR << " ";
 			m_stream << "ZF " << noboolalpha << m_code->isZeroFlag() << " " << VERTICAL_BAR << " ";
-			m_stream  << "GF " << noboolalpha << m_code->isGreaterFlag();
+			m_stream << "GF " << noboolalpha << m_code->isGreaterFlag();
 		}
 
 		m_stream << endl;
@@ -115,7 +116,7 @@ void Debug::DrawCodeAndStackState(int codeOffset)
 	int current_op = codeOffset;
 
 	//плавное перемещение на 4 позицию
-	for(int i=0;i < (m_codeHeight/2) && codeOffset > 0;i++)
+	for(int i=0;i < m_codeHeight / 2;i++)
 		codeOffset -= 3;
 
 	//адрес вершины стека
@@ -131,8 +132,8 @@ void Debug::DrawCodeAndStackState(int codeOffset)
 	for(int i=0;i<m_codeHeight;i++)
 	{
 		//адрес
-		m_stream << hex << setw(4) << setfill('0') << m_code->getRegister(Help::CS).getValue() << ':'
-			<< hex << setw(4) << setfill('0') << (codeOffset - m_code->getRegister(Help::CS).getValue())
+		m_stream << hex << setw(4) << right << setfill('0') << m_code->getRegister(Help::CS).getValue() << ':'
+			<< hex << setw(4) << setfill('0') << (word)(codeOffset - (m_code->getRegister(Help::CS).getValue() << 1))
 			<< setw(6) << (current_op == codeOffset ? setfill(FILLER) : setfill(' ')) << ' ';
 
 		byte command[3];
@@ -145,11 +146,15 @@ void Debug::DrawCodeAndStackState(int codeOffset)
 		bool smallRegister = r.getValue() <= 0xFF;
 		int registerWidth = smallRegister ? 2 : 4;
 		//проверяем на достищения сегмента данных, которые следует сразу после сегмента команд
-		if (codeOffset >= m_code->getRegister(Help::DS).getValue())
+		if (command[0] >= Help::doubleArrayLength(AsmOperator::Operators) 
+			|| (!Help::isOnlyNumericOperator(command[0]) && command[1] >= Help::doubleArrayLength(AsmOperator::Registers))
+			|| (!Help::isOnlyNumericOperator(command[0]) && command[2] >= Help::doubleArrayLength(AsmOperator::Registers)))
 		{
-			m_stream << "   DATA SEGMENT";
-
-			m_stream << setw(31) << setfill(' ') << VERTICAL_BAR << " ";
+			m_stream << "   ";
+			m_stream << left << hex << setfill('0') << setw(2) << (int)command[0];
+			m_stream << ' ' << hex << setfill('0') << setw(2) << (int)command[1];
+			m_stream << ' ' << hex << setfill('0') << setw(2) << (int)command[2];
+			m_stream << "                                  " << VERTICAL_BAR << " ";
 		}
 		else
 		{
@@ -178,7 +183,7 @@ void Debug::DrawCodeAndStackState(int codeOffset)
 
 				byte heap[2];
 				//считываем 2 байта стека из памяти
-				m_code->memory.read(m_code->getRegister(Help::SS).getValue() + stack_head, heap, 2);
+				m_code->memory.read((m_code->getRegister(Help::SS).getValue() << 4) + stack_head, heap, 2);
 				RegisterWord r;
 				r.setLeftRegister(heap[0]);
 				r.setRightRegister(heap[1]);
@@ -226,7 +231,7 @@ void Debug::DrawDataState()
 		{
 			byte buffer[1];
 
-			m_code->memory.read(m_code->getRegister(Help::DS).getValue() + dataAddr + j, buffer, 1);
+			m_code->memory.read((m_code->getRegister(Help::DS).getValue() << 4) + dataAddr + j, buffer, 1);
 
 			m_stream << hex << setfill('0') << setw(2) << (int)buffer[0] << ' ';
 			if (j == 7)
@@ -239,7 +244,7 @@ void Debug::DrawDataState()
 		{
 			byte buffer[1];
 
-			m_code->memory.read(m_code->getRegister(Help::DS).getValue() + dataAddr + j, buffer, 1);
+			m_code->memory.read((m_code->getRegister(Help::DS).getValue() << 4) + dataAddr + j, buffer, 1);
 			if (!isprint(buffer[0]))
 				buffer[0] = '.';
 			m_stream << (char)buffer[0];

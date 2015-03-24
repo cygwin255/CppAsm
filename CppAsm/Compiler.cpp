@@ -38,6 +38,7 @@ const int Compiler::BUFFER_SIZE = 256;
 //шаманские регулярки
 //Не стоит менять {1,} на +, у данной реализации с ним проблемы, нужно сделать через boost
 const regex Compiler::COMMAND_PARSE_REGEX("^[ \t]*([a-zA-Z]+) *([0-9a-fA-F]{1,}(h|[ \t]*$)?|[a-zA-Z0-9_-]{2,}|[ \t]*$)([ \t]*,[ \t]*([a-zA-Z]{2}|[0-9a-fA-F]+h?|\\[([a-zA-Z0-9]+)\\][ \t]*$)|[ \t]*$)");
+
 const regex Compiler::LABEL_PARSE_REGEX("^[ \t]*([a-zA-Z0-9_-]{1,}): *$");
 const regex Compiler::DATA_PARSE_REGEX("^[ \t]*([a-zA-Z0-9]+)[ \t]*d(b|w)[ \t]*('(.+)'|([a-fA-F0-9]+h{0,}[ \t]*(,| *$)+[ \t]*)+|\\[([a-fA-F0-9]+h?)\\])[ \t]*$");
 const regex Compiler::DATA_ARRAY_PARSE_REGEX("[a-fA-F0-9]*h?");
@@ -95,11 +96,17 @@ int Compiler::Compile( const char *LoadPath, const char *SavePath)
 	parseAllLabels(Input, labels);
 
 	Input.clear();
+
+	Input.seekg (0, Input.end);
+	int flength = Input.tellg();
+	flength++;
+	Input.clear();
 	Input.seekg(ios::beg);
 
-	while (!Input.eof())
+	while (!Input.eof() && flength >= 0)
 	{
-		Input.getline(line, BUFFER_SIZE, '\n');
+		Input.getline(line, flength > BUFFER_SIZE ? BUFFER_SIZE : flength, '\n');
+		flength -= strlen(line) + 2;
 
 		smatch match_result;
 
@@ -159,6 +166,9 @@ int Compiler::Compile( const char *LoadPath, const char *SavePath)
 	
 
 	//устанавливаем указатель на сегмент данных
+
+	int t = codeArray.getSize();
+
 	RegisterWord offset(codeArray.getSize());
 	codeArray.SetAt(0, offset.getLeftRegister());
 	codeArray.SetAt(1, offset.getRightRegister());
@@ -355,15 +365,15 @@ void Compiler::readFile(const char *path, istringstream &stream)
 	int length = input.tellg();
 	input.seekg (0, input.beg);
 
-	char *buffer = new char[length];
+	char *buffer = new char[length+1];
 
 	input.read(buffer, length);
 	input.close();
-
+	buffer[length] = '\0';
 	stream = istringstream(string(buffer)); 
 
 	delete [] buffer;
-}
+}	
 
 void Compiler::parseUses(const string &line, CodeArray &codeArray, list<RegisterWord> &usesParams)
 {

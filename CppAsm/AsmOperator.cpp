@@ -21,6 +21,10 @@
 #include "MSET.h"
 #include "CALL.h"
 #include "MOD.h"
+#include "SHL.h"
+#include "SHR.h"
+#include "ROL.h"
+#include "ROR.h"
 
 
 #include "defs.h"
@@ -28,7 +32,7 @@
 using namespace std;
 
 const char *AsmOperator::Operators[] = { "mov", "add", "sub", "inc", "dec", "int","loop", "jmp", "ret",
-	"push", "push", "pop", "nop", "cmp", "jz", "jnz", "mul", "div", "mget", "mset", "call", "mod", "" };
+	"push", "push", "pop", "nop", "cmp", "jz", "jnz", "mul", "div", "mget", "mset", "call", "mod", "shl", "shr", "rol", "ror", "" };
 
  const char *AsmOperator::Registers[] = { "ax", "ah", "al", "bx", "bh", "bl", "cx", "ch", "cl", "dx", 
  	"dh", "dl", "sp", "bp", "si", "di", "cs", "ds", "ss", "es", "ip", "" };
@@ -111,6 +115,20 @@ AsmOperator *AsmOperator::newOperator(byte opcode)
 	case Help::MOD:
 		op = new OpMod();
 		break;
+	case Help::SHL:
+		op = new OpShl();
+		break;
+	case Help::SHR:
+		op = new OpShr();
+		break;
+	case Help::ROL:
+		op = new OpRol();
+		break;
+	case Help::ROR:
+		op = new OpRor();
+		break;
+	default:
+		throw "Invalid operator";
 	}
 #pragma endregion switch
 

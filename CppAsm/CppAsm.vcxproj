@@ -123,6 +123,10 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="RET.h" />
     <ClInclude Include="Help.h" />
+    <ClInclude Include="ROL.h" />
+    <ClInclude Include="ROR.h" />
+    <ClInclude Include="SHL.h" />
+    <ClInclude Include="SHR.h" />
     <ClInclude Include="SUB.h" />
   </ItemGroup>
   <ItemGroup>

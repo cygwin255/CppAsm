@@ -149,6 +149,18 @@
     <ClInclude Include="CmdLineArgHelper.h">
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
+    <ClInclude Include="SHL.h">
+      <Filter>Заголовочные файлы\Operators</Filter>
+    </ClInclude>
+    <ClInclude Include="SHR.h">
+      <Filter>Заголовочные файлы\Operators</Filter>
+    </ClInclude>
+    <ClInclude Include="ROL.h">
+      <Filter>Заголовочные файлы\Operators</Filter>
+    </ClInclude>
+    <ClInclude Include="ROR.h">
+      <Filter>Заголовочные файлы\Operators</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="CppAsm.rc">

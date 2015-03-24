@@ -33,6 +33,10 @@ namespace Help
 	static const char MSET = 0x13;
 	static const char CALL = 0x14;
 	static const char MOD = 0x15;
+	static const char SHL = 0x16;
+	static const char SHR = 0x17;
+	static const char ROL = 0x18;
+	static const char ROR = 0x19;
 
 	static const char AX = 0x00;
 	static const char AH = 0x01;
@@ -95,6 +99,15 @@ namespace Help
 		return i;
 	}
 
+	static int arrayLength(const char *arr[])
+	{
+		int i = 0;
+		while(arr[i][0] != '\0')
+			i++;
+
+		return i;
+	}
+
 	static int findInArray(const char *arr[], const char *str)
 	{
 		for(int i=0;i<doubleArrayLength(arr);i++)
@@ -141,7 +154,7 @@ namespace Help
 
 	static void getWordFromStack(Code &code, RegisterWord &r)
 	{
-		int addr = code.getRegister(Help::SS).getValue() + code.getRegister(Help::SP).getValue();
+		int addr = (code.getRegister(Help::SS).getValue() << 4) + code.getRegister(Help::SP).getValue();
 
 		r.setRightRegister(*code.memory[addr - 1]);
 		r.setLeftRegister(*code.memory[addr - 2]);
@@ -150,7 +163,7 @@ namespace Help
 
 	static void putWordToStack(Code &code, const RegisterWord &reg)
 	{
-		int addr = code.getRegister(Help::SS).getValue() + code.getRegister(Help::SP).getValue();
+		int addr = (code.getRegister(Help::SS).getValue() << 4) + code.getRegister(Help::SP).getValue();
 
 		*code.memory[addr++] = reg.getLeftRegister();
 		*code.memory[addr] = reg.getRightRegister();

@@ -6,7 +6,7 @@
 class Memory
 {
 public:
-	Memory(int = 65536);
+	Memory();
 	~Memory();
 	
 	char *operator[](size_t);
@@ -17,7 +17,7 @@ public:
 
 private:
 	char *memory;
-	size_t size;
+	static const size_t size = 1048560;
 };
 
 #endif

@@ -21,7 +21,7 @@ pow:
 loop pow
 out:
 call print
-jmp exit
+int 8h
 
 factorial uses ax, bx, cx, dx:
 	mov cx, [hello]
@@ -53,11 +53,9 @@ print uses cx, dx, bx:
 	
 		mget bh, cx
 		push bh
-		int 4h
+		int 6h
 		inc cx
 		
 	cmp cx, dx
 	jnz print_loop
 ret
-
-exit:
