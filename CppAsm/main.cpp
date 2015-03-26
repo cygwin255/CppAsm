@@ -72,22 +72,24 @@ int main(int argc, char **argv)
 		code.Run();
 	}
 #else
-//	Compiler::getInstance()->Compile("..\\Examples\\HelloWorld.casm", "..\\Examples\\HelloWorld.obj");
+	//Compiler::getInstance()->Compile("..\\Examples\\HelloWorld.casm", "..\\Examples\\HelloWorld.obj");
 	//Compiler::getInstance()->Compile("..\\Examples\\factorial.casm", "..\\Examples\\factorial.obj");
-	Compiler::getInstance()->Compile("..\\Examples\\long math - factorial.casm", "..\\Examples\\long math - factorial.obj");
-	
+	//Compiler::getInstance()->Compile("..\\Examples\\long math - factorial.casm", "..\\Examples\\long math - factorial.obj");
+	Compiler::getInstance()->Compile("..\\Examples\\power of 2.casm", "..\\Examples\\power of 2.obj");
+
 	//Code code("..\\Examples\\HelloWorld.obj");
 	//Code code("..\\Examples\\factorial.obj");
-	Code code("..\\Examples\\long math - factorial.obj");
-	code.setDebug(false);
+	//Code code("..\\Examples\\long math - factorial.obj");
+	Code code("..\\Examples\\power of 2.obj");
+
+	code.setDebug(true);
 	code.Run();
-	while(_getch() != 27);
 #endif
 
 	cout << endl << "Press ESC to exit";
-#ifndef _DEBUG
+
 	while(_getch() != 27);
-#endif
+
 	
 	return 0;
 }

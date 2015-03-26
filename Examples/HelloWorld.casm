@@ -1,8 +1,5 @@
 hello db 'Hello, World!\n$'
 
-mov ax, 123h
-ror ax, 1h
-
 call print
 
 int 8h

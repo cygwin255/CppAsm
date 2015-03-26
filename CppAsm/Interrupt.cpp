@@ -2,6 +2,7 @@
 
 #include <exception>
 #include <iostream>
+#include <iomanip>
 
 #include "Code.h"
 #include "Help.h"
@@ -82,17 +83,17 @@ void Interrupt::Int01h(Code &code)
 void Interrupt::Int02h(Code &code)
 {
 	RegisterWord out;
-	byte i;
+	int i;
 	cin >> i;
-	out.setValue(i);
+	out.setValue(i%256);
 	Help::putWordToStack(code, out);
 }
 void Interrupt::Int03h(Code &code)
 {
 	RegisterWord out;
-	word i;
+	int i;
 	cin >> i;
-	out.setValue(i);
+	out.setValue(i%65536);
 	Help::putWordToStack(code, out);
 }
 void Interrupt::Int04h(Code &code)
@@ -120,7 +121,8 @@ void Interrupt::Int06h(Code &code)
 	{
 		if (code.getRegister(Help::BP).getRightRegister() == 0x01)
 			cout << hex;
-	
+		if (code.getRegister(Help::BP).getLeftRegister() == 0x01)
+			cout << setw(2) << setfill('0');
 		cout << (int)reg.getRightRegister();
 	}
 }
@@ -132,7 +134,8 @@ void Interrupt::Int07h(Code &code)
 	{
 		if (code.getRegister(Help::BP).getRightRegister() == 0x01)
 			cout << hex;
-
+		if (code.getRegister(Help::BP).getLeftRegister() == 0x01)
+			cout << setw(2) << setfill('0');
 		cout << reg.getValue();
 	}
 }

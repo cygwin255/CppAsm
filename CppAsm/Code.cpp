@@ -37,7 +37,7 @@ Code::Code(const char * path)
 	getRegister(Help::CS).setValue(0x0000); // сегмент кода
 	getRegister(Help::DS).setValue(0x1000); // сегмент данных
 
-	int ptr = ((byte)*codeArray[0] << 2) + (byte)*codeArray[1];
+	int ptr = ((byte)*codeArray[0] << 8) + (byte)*codeArray[1];
 
 	//запись программы в виртуальную память, первый 2 байта пропускаем
 	std::copy(codeArray[2], codeArray[ptr], memory[getRegister(Help::CS).getValue() << 4]);
@@ -68,7 +68,7 @@ void Code::Run()
 	while( !isExitProgram() )
 	{
 		//абcолютный адрес
-		int addr = ((byte)getRegister(Help::CS).getValue() << 4) + (byte)getRegister(Help::IP).getValue();
+		int addr = (getRegister(Help::CS).getValue() << 4) + getRegister(Help::IP).getValue();
 
 		if (isDebug())
 			deb.Update(addr);

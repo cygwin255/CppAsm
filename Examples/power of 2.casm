@@ -1,19 +1,38 @@
+msg db 'Enter a number: $'
+
 mov ax, 1
-mov cx, 15
+
+call print
+
+int 2h
+pop cx
+
 lp:
 	push ax
-	int 5h
+	int 7h
 
 	call new_line
 	
 	mul ax, 2
 loop lp
 
-jmp exit
+int 8h
 
 new_line:
 	push 0Ah
-	int 6h
+	int 4h
 ret
 
-exit:
+print uses ax, bx:
+	mov ax,[msg]
+	
+	print_loop:
+		mget bh, ax
+		cmp bh, 24h ; 24h - $
+		jz print_loop_ex
+		push bh
+		int 4h
+		inc ax
+	jmp print_loop
+	print_loop_ex:
+ret

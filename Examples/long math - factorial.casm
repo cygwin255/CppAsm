@@ -1,6 +1,6 @@
 hello db [20]
 size dw 20
-fact dw 20
+fact dw 10
 
 mov ax, [hello]
 
@@ -44,17 +44,25 @@ factorial uses ax, bx, cx, dx:
 ex:
 ret
 
-print uses cx, dx, bx:
+print uses cx, dx, bx, ax:
 	mov cx, [hello]
 	mget dx, [size]
-	dec dx
+
+	mov bp,0101h
+	mov ax,0
 	
-	print_loop:
-	
+	print_loop:		
 		mget bh, cx
+		inc cx
+		
+		cmp ax, 0
+		jnz ready_to_print
+		cmp bh,0
+		jz print_loop
+		mov ax,1
+		ready_to_print:
 		push bh
 		int 6h
-		inc cx
 		
 	cmp cx, dx
 	jnz print_loop
